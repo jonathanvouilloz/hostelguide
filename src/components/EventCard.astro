@@ -1,17 +1,19 @@
 ---
+/**
+ * EventCard - Event listing with timeline design
+ * Redesigned for BLACK theme
+ */
 import type { HostelEvent } from '../lib/types';
 import { getWhatsAppUrl } from '../lib/deeplinks';
+import Badge from './ui/Badge.astro';
 
 interface Props {
   event: HostelEvent;
+  showTimelineNode?: boolean;
+  isFirst?: boolean;
 }
 
-const { event } = Astro.props;
-
-// Parse date for display
-const eventDate = new Date(event.date);
-const dayName = eventDate.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-const dayNumber = eventDate.getDate();
+const { event, showTimelineNode = false, isFirst = false } = Astro.props;
 
 // Build CTA URL
 function getCtaUrl(): string | null {
@@ -26,117 +28,63 @@ function getCtaUrl(): string | null {
 const ctaUrl = getCtaUrl();
 ---
 
-<article class="event-card card">
-  <div class="event-header">
-    <div class="date-block">
-      <span class="day-name">{dayName}</span>
-      <span class="day-number">{dayNumber}</span>
+<article class="event-card relative flex gap-4">
+  <!-- Timeline Node -->
+  {showTimelineNode && (
+    <div class="flex flex-col items-center pt-1">
+      <div class:list={[
+        'flex size-11 shrink-0 items-center justify-center rounded-full border-2',
+        isFirst
+          ? 'bg-[--color-primary] border-[--color-primary] text-[--color-bg]'
+          : 'bg-[--color-surface] border-[--color-border-light] text-[--color-primary]'
+      ]}>
+        <span class="material-symbols-outlined text-[20px]">celebration</span>
+      </div>
     </div>
-    <div class="time-block">
-      <span class="time">{event.startTime}</span>
-      <span class="time-separator">—</span>
-      <span class="time">{event.endTime}</span>
-    </div>
-  </div>
+  )}
 
-  <div class="event-content p-4">
-    <h3 class="event-title font-semibold text-lg">{event.title}</h3>
-    <p class="event-description text-sm text-muted mt-1">{event.description}</p>
-
-    <div class="event-meta mt-3 space-y-1">
-      <div class="meta-item flex items-center gap-2 text-sm">
-        <span aria-hidden="true">📍</span>
-        <span>{event.location}</span>
+  <!-- Event Content -->
+  <div class="flex-1 card overflow-hidden">
+    <!-- Time Badge -->
+    <div class="flex items-center justify-between p-3 border-b border-[--color-border]">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[--color-primary] text-[18px]">schedule</span>
+        <span class="text-sm font-bold text-[--color-text]">
+          {event.startTime} - {event.endTime}
+        </span>
       </div>
       {event.price && (
-        <div class="meta-item flex items-center gap-2 text-sm">
-          <span aria-hidden="true">💰</span>
-          <span>{event.price}</span>
-        </div>
+        <Badge variant="success">{event.price}</Badge>
       )}
     </div>
 
-    {ctaUrl && event.cta && (
-      <a
-        href={ctaUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="cta-button touch-target mt-4"
-      >
-        {event.cta.label}
-        <span aria-hidden="true">→</span>
-      </a>
-    )}
+    <!-- Event Details -->
+    <div class="p-4 space-y-3">
+      <div>
+        <h3 class="text-lg font-bold text-[--color-text] leading-tight">{event.title}</h3>
+        <p class="text-sm text-[--color-text-secondary] mt-1 line-clamp-2">{event.description}</p>
+      </div>
+
+      <!-- Location -->
+      <div class="flex items-center gap-2 text-sm text-[--color-text-secondary]">
+        <span class="material-symbols-outlined text-[16px]">location_on</span>
+        <span>{event.location}</span>
+      </div>
+
+      <!-- CTA Button -->
+      {ctaUrl && event.cta && (
+        <a
+          href={ctaUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[--color-primary] text-[--color-bg] font-bold text-sm mt-2 hover:bg-[--color-primary-dark] transition-colors touch-target"
+        >
+          <span class="material-symbols-outlined text-[18px]">
+            {event.cta.type === 'whatsapp' ? 'chat' : 'arrow_forward'}
+          </span>
+          {event.cta.label}
+        </a>
+      )}
+    </div>
   </div>
 </article>
-
-<style>
-  .event-card {
-    overflow: hidden;
-  }
-
-  .event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: var(--color-primary);
-    color: white;
-  }
-
-  .date-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .day-name {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    opacity: 0.9;
-  }
-
-  .day-number {
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1;
-  }
-
-  .time-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .time-separator {
-    font-size: 0.75rem;
-    opacity: 0.7;
-  }
-
-  .cta-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background-color: var(--color-accent, #f59e0b);
-    color: white;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-    transition: all 0.15s ease;
-  }
-
-  .cta-button:hover {
-    filter: brightness(1.1);
-  }
-
-  .cta-button:active {
-    transform: scale(0.98);
-  }
-</style>

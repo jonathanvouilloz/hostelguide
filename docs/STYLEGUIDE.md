@@ -1,6 +1,145 @@
 # HostelGuide - Style Guide
 
-> Conventions de code et design pour le projet.
+> Design system et conventions pour le projet - **Theme BLACK**
+
+---
+
+## Design System - Theme BLACK
+
+### Palette de couleurs
+
+| Variable | Valeur | Usage |
+|----------|--------|-------|
+| `--color-primary` | `#13c8ec` | Boutons principaux, liens, accents |
+| `--color-primary-dark` | `#0ea5c6` | Hover du primary |
+| `--color-accent` | `#f59e0b` | Highlights, badges spéciaux |
+| `--color-bg` | `#101f22` | Background principal |
+| `--color-surface` | `#192f33` | Cards, modals, surfaces |
+| `--color-surface-input` | `#234248` | Inputs, chips inactifs |
+| `--color-text` | `#ffffff` | Texte principal |
+| `--color-text-secondary` | `#92c0c9` | Texte secondaire, descriptions |
+| `--color-muted` | `#6b7280` | Texte désactivé |
+| `--color-border` | `rgba(255,255,255,0.05)` | Bordures subtiles |
+| `--color-border-light` | `rgba(255,255,255,0.1)` | Bordures plus visibles |
+| `--color-success` | `#22c55e` | États de succès |
+| `--color-warning` | `#f59e0b` | Avertissements |
+| `--color-error` | `#ef4444` | Erreurs, urgence |
+
+### Typographie
+
+**Font principale** : Plus Jakarta Sans (Google Fonts)
+
+| Style | Weight | Size | Usage |
+|-------|--------|------|-------|
+| Display | 800 | 1.875rem (30px) | Titres hero |
+| Heading 1 | 700 | 1.375rem (22px) | Titres de section |
+| Heading 2 | 700 | 1.125rem (18px) | Titres de cards |
+| Body | 400 | 1rem (16px) | Texte courant |
+| Body Small | 400 | 0.875rem (14px) | Descriptions |
+| Caption | 500 | 0.75rem (12px) | Labels, metadata |
+| Micro | 700 | 0.625rem (10px) | Nav labels, badges |
+
+### Icônes
+
+**Material Symbols Outlined** (Google Fonts)
+
+Configuration par défaut :
+```css
+font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+```
+
+Icône filled (états actifs) :
+```css
+font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+```
+
+Icônes utilisées :
+- Navigation : `home`, `explore`, `calendar_month`, `menu_book`
+- Actions : `arrow_back`, `content_copy`, `directions`, `chat`
+- Catégories : `restaurant`, `local_bar`, `hiking`, `local_laundry_service`, `directions_bus`
+- Info : `wifi`, `schedule`, `lock`, `emergency`, `gavel`
+
+### Spacing & Border Radius
+
+| Variable | Valeur | Usage |
+|----------|--------|-------|
+| `--radius` | 0.5rem (8px) | Petits éléments |
+| `--radius-lg` | 1rem (16px) | Buttons, inputs |
+| `--radius-xl` | 1.5rem (24px) | Cards |
+| `--radius-2xl` | 2rem (32px) | Large cards |
+| `--radius-full` | 9999px | Pills, avatars |
+
+### Shadows & Effects
+
+```css
+/* Card shadow */
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+
+/* Primary button glow */
+box-shadow: 0 0 15px rgba(19, 200, 236, 0.3);
+
+/* Backdrop blur (headers, nav) */
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+```
+
+---
+
+## Composants
+
+### Buttons
+
+```html
+<!-- Primary -->
+<button class="btn-primary">Label</button>
+
+<!-- Secondary -->
+<button class="btn-secondary">Label</button>
+
+<!-- Ghost -->
+<button class="btn-ghost">
+  <span class="material-symbols-outlined">icon</span>
+</button>
+```
+
+### Cards
+
+```html
+<!-- Standard card -->
+<div class="card">Content</div>
+
+<!-- Elevated card (with shadow) -->
+<div class="card-elevated">Content</div>
+```
+
+### Badges
+
+Types de badges :
+- **Default** : `bg-primary/10 text-primary`
+- **Success** : `bg-green-500/20 text-green-300`
+- **Warning** : `bg-orange-500/20 text-orange-300`
+- **Info** : `bg-blue-500/20 text-blue-300`
+- **Purple** : `bg-purple-500/20 text-purple-300`
+
+```html
+<span class="rounded-md bg-green-500/20 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-green-300">
+  Label
+</span>
+```
+
+### Filter Chips
+
+```html
+<!-- Active -->
+<button class="flex h-9 items-center rounded-xl bg-primary px-5 shadow-[0_0_10px_rgba(19,200,236,0.3)]">
+  <span class="text-[--color-bg] text-sm font-bold">All</span>
+</button>
+
+<!-- Inactive -->
+<button class="flex h-9 items-center rounded-xl bg-surface-input px-5">
+  <span class="text-white text-sm font-medium">Label</span>
+</button>
+```
 
 ---
 
@@ -11,6 +150,7 @@
 | Type | Convention | Exemple |
 |------|------------|---------|
 | Composants Astro | PascalCase | `SpotCard.astro`, `WiFiCard.astro` |
+| Composants UI | PascalCase dans `/ui` | `ui/Icon.astro`, `ui/Button.astro` |
 | Pages | kebab-case | `index.astro`, `spot/[id].astro` |
 | Utilitaires TS | camelCase | `content.ts`, `deeplinks.ts` |
 | JSON content | kebab-case | `settings.json`, `house-rules.md` |
@@ -54,50 +194,20 @@ const formattedPrice = formatPrice(spot.priceRange);
 ---
 
 <!-- 5. Template -->
-<article class="spot-card">
-  <h2>{spot.name}</h2>
+<article class="card">
+  <h2 class="text-lg font-bold">{spot.name}</h2>
   {showBadge && <span class="badge">{spot.cuisineType}</span>}
 </article>
 
 <!-- 6. Styles (scoped) -->
 <style>
-  .spot-card {
-    /* ... */
-  }
+  /* Scoped styles */
 </style>
 
 <!-- 7. Scripts (si nécessaire) -->
 <script>
   // Client-side JS minimal
 </script>
-```
-
-### Fichier utilitaire TypeScript
-
-```typescript
-// src/lib/content.ts
-
-// 1. Imports
-import type { Settings, Spot, Event } from './types';
-
-// 2. Types locaux (si non exportés)
-type SpotCategory = 'restaurants' | 'bars' | 'laundry' | 'transport' | 'activities';
-
-// 3. Fonctions exportées
-export async function getSettings(): Promise<Settings> {
-  const data = await import('../../content/settings.json');
-  return data.default;
-}
-
-export async function getSpots(category: SpotCategory): Promise<Spot[]> {
-  const data = await import(`../../content/spots/${category}.json`);
-  return data.default.spots;
-}
-
-// 4. Helpers privés (en bas)
-function validateSpot(spot: unknown): spot is Spot {
-  // ...
-}
 ```
 
 ---
@@ -112,95 +222,17 @@ function validateSpot(spot: unknown): spot is Spot {
 - **Types explicites** pour fonctions publiques
 - **Optionnel avec `?`** — pas `| undefined`
 
-### Exemples
-
-```typescript
-// Bon
-interface Spot {
-  id: string;
-  name: string;
-  description?: string;  // Optionnel
-}
-
-function getSpot(id: string): Promise<Spot | undefined> {
-  // ...
-}
-
-// Mauvais
-type Spot = {
-  id: any;
-  name: string;
-  description: string | undefined;
-}
-```
-
 ---
 
-## CSS / Tailwind
+## Accessibilité
 
-### Principes
+### Règles minimales
 
-1. **Mobile-first** — styles de base pour mobile, breakpoints pour desktop
-2. **Utility-first** — préférer classes Tailwind au CSS custom
-3. **CSS variables** — pour les valeurs dynamiques (couleurs du thème)
-4. **Scoped styles** — utiliser `<style>` dans les composants Astro
-
-### Classes personnalisées (global.css)
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* CSS variables injectées depuis settings */
-:root {
-  --color-primary: #2563eb;
-  --color-accent: #f59e0b;
-  --color-bg: #ffffff;
-  --color-text: #1f2937;
-  --color-muted: #6b7280;
-  --radius: 12px;
-}
-
-/* Utility classes custom */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Component classes réutilisables */
-@layer components {
-  .btn-primary {
-    @apply bg-primary text-white px-4 py-3 rounded-xl font-medium;
-  }
-
-  .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100;
-  }
-}
-```
-
-### Breakpoints
-
-```css
-/* Mobile first */
-.element {
-  padding: 1rem;           /* Mobile: 375px+ */
-}
-
-@media (min-width: 640px) {
-  .element {
-    padding: 1.5rem;       /* sm: 640px+ */
-  }
-}
-
-@media (min-width: 768px) {
-  .element {
-    padding: 2rem;         /* md: 768px+ */
-  }
-}
-```
+1. **Contraste AA** — ratio 4.5:1 pour texte normal
+2. **Alt text** — sur toutes les images informatives
+3. **Labels** — sur tous les éléments de formulaire
+4. **Focus visible** — ne pas supprimer les outlines
+5. **Sémantique** — utiliser les bonnes balises HTML
 
 ### Touch targets
 
@@ -211,6 +243,26 @@ type Spot = {
   min-width: 44px;
 }
 ```
+
+---
+
+## Performance
+
+### Guidelines
+
+1. **Images** — Utiliser `loading="lazy"` sur images below-the-fold
+2. **JS minimal** — Astro par défaut n'envoie pas de JS
+3. **Fonts** — Preconnect aux Google Fonts
+4. **Icons** — Material Symbols avec subset si possible
+
+### Objectifs Lighthouse
+
+| Métrique | Cible |
+|----------|-------|
+| Performance | > 90 |
+| Accessibility | > 90 |
+| Best Practices | > 90 |
+| SEO | > 90 |
 
 ---
 
@@ -235,77 +287,13 @@ type Spot = {
 | `docs` | Documentation uniquement |
 | `style` | Formatage (pas de changement de code) |
 | `refactor` | Refactoring (pas de nouvelle feature ni fix) |
-| `test` | Ajout/modification de tests |
 | `chore` | Maintenance, dépendances, config |
-
-### Exemples
-
-```bash
-feat(spots): add cuisine filter to restaurants page
-fix(wifi): copy button not working on iOS Safari
-docs: update README with setup instructions
-style: format components with prettier
-refactor(content): simplify spot loading logic
-chore: update astro to 4.15
-```
 
 ### Scope suggérés
 
 - `home` — Page d'accueil
 - `spots` — Système de spots (cards, detail)
 - `events` — Calendrier et événements
-- `wifi` — WiFi card
-- `pwa` — Configuration PWA
-- `content` — Chargement contenu
+- `ui` — Composants UI réutilisables
 - `layout` — Layout et navigation
-- `cms` — Configuration PagesCMS
-
----
-
-## Accessibilité
-
-### Règles minimales
-
-1. **Contraste AA** — ratio 4.5:1 pour texte normal
-2. **Alt text** — sur toutes les images informatives
-3. **Labels** — sur tous les éléments de formulaire
-4. **Focus visible** — ne pas supprimer les outlines
-5. **Sémantique** — utiliser les bonnes balises HTML
-
-### Exemple
-
-```astro
-<!-- Bon -->
-<button aria-label="Copy WiFi password">
-  <span class="sr-only">Copy</span>
-  <CopyIcon />
-</button>
-
-<!-- Image avec alt -->
-<img src={spot.image} alt={`Photo of ${spot.name}`} />
-
-<!-- Skip link -->
-<a href="#main" class="sr-only focus:not-sr-only">
-  Skip to main content
-</a>
-```
-
----
-
-## Performance
-
-### Guidelines
-
-1. **Images** — Utiliser `<Image>` d'Astro pour optimisation
-2. **JS minimal** — Astro par défaut n'envoie pas de JS
-3. **Lazy loading** — `loading="lazy"` sur images below-the-fold
-4. **Fonts** — System fonts ou preload si custom
-
-### Objectifs Lighthouse
-
-| Métrique | Cible |
-|----------|-------|
-| Performance | > 90 |
-| Accessibility | > 90 |
-| Best Practices | > 90 |
-| SEO | > 90 |
+- `theme` — Theming et styles

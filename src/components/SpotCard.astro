@@ -1,120 +1,137 @@
 ---
+/**
+ * SpotCard - Restaurant/Bar/Service listing card
+ * Redesigned for BLACK theme
+ */
 import type { Spot } from '../lib/types';
+import Badge from './ui/Badge.astro';
 
 interface Props {
   spot: Spot;
-  showCuisine?: boolean;
+  featured?: boolean;
 }
 
-const { spot, showCuisine = false } = Astro.props;
+const { spot, featured = false } = Astro.props;
 
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
 }
+
+// Map cuisine types to badge variants
+const cuisineBadgeVariant: Record<string, 'purple' | 'success' | 'warning' | 'info'> = {
+  thai: 'warning',
+  western: 'info',
+  japanese: 'purple',
+  vegetarian: 'success',
+  indian: 'warning',
+  default: 'info',
+};
+
+const badgeVariant = spot.cuisineType
+  ? cuisineBadgeVariant[spot.cuisineType] || cuisineBadgeVariant.default
+  : 'info';
 ---
 
-<a href={`/spot/${spot.id}`} class="spot-card card touch-target block transition-all">
-  <div class="image-container">
-    {spot.image ? (
-      <img
-        src={spot.image}
-        alt={spot.name}
-        class="spot-image"
-        loading="lazy"
-      />
-    ) : (
-      <div class="placeholder" aria-hidden="true">
-        <span>No image</span>
-      </div>
-    )}
-  </div>
+<a href={`/spot/${spot.id}`} class="spot-card group">
+  <article class="relative flex flex-col overflow-hidden rounded-2xl bg-[--color-surface] shadow-sm border border-[--color-border] transition-transform active:scale-[0.99]">
+    <!-- Image -->
+    <div class:list={['relative w-full overflow-hidden', featured ? 'h-48' : 'h-40']}>
+      {spot.image ? (
+        <div
+          class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+          style={`background-image: url("${spot.image}");`}
+        ></div>
+      ) : (
+        <div class="absolute inset-0 bg-[--color-surface-input] flex items-center justify-center">
+          <span class="material-symbols-outlined text-[48px] text-[--color-text-secondary]/30">image</span>
+        </div>
+      )}
 
-  <div class="content p-3">
-    <div class="header flex items-center justify-between gap-2">
-      <h3 class="name font-medium text-base">{spot.name}</h3>
-      <span class="price badge" aria-label={`Price: ${spot.priceRange}`}>
-        {spot.priceRange}
-      </span>
+      <!-- Gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[--color-surface]/90 to-transparent opacity-60"></div>
+
+      <!-- Featured Badge -->
+      {featured && (
+        <div class="absolute left-4 top-4 flex items-center gap-1 rounded-lg bg-[--color-primary] px-3 py-1.5 shadow-lg">
+          <span class="material-symbols-outlined text-[--color-bg] text-[16px]">verified</span>
+          <span class="text-xs font-bold text-[--color-bg] tracking-wide uppercase">Staff Pick</span>
+        </div>
+      )}
+
+      <!-- Distance Badge -->
+      {spot.walkingDistance && (
+        <div class="absolute bottom-3 right-3 rounded-lg bg-black/60 backdrop-blur-sm px-2.5 py-1">
+          <span class="text-xs font-bold text-white">{spot.walkingDistance}</span>
+        </div>
+      )}
     </div>
 
-    {showCuisine && spot.cuisineType && (
-      <span class="cuisine badge badge-secondary mt-1">
-        {capitalize(spot.cuisineType)}
-      </span>
-    )}
+    <!-- Content -->
+    <div class="flex flex-col gap-2 p-4">
+      <!-- Title Row -->
+      <div class="flex justify-between items-start">
+        <div class="flex-1 min-w-0">
+          <h3 class="text-lg font-bold text-[--color-text] leading-tight truncate">{spot.name}</h3>
+          {spot.tagline && (
+            <p class="text-sm font-medium text-[--color-primary] mt-1">{spot.tagline}</p>
+          )}
+        </div>
 
-    <p class="description text-sm text-muted mt-2">
-      {spot.description}
-    </p>
-  </div>
+        <!-- Rating -->
+        {spot.rating && (
+          <div class="flex h-8 items-center justify-center rounded-lg bg-[--color-surface-input] px-2.5 ml-2 shrink-0">
+            <span class="text-xs font-bold text-[--color-text]">{spot.rating}</span>
+            <span class="material-symbols-outlined ml-1 text-yellow-400 text-[14px] filled">star</span>
+          </div>
+        )}
+
+        <!-- Price (fallback if no rating) -->
+        {!spot.rating && spot.priceRange && (
+          <span class="font-semibold text-[--color-text-secondary] ml-2 shrink-0">
+            {spot.priceRange}
+          </span>
+        )}
+      </div>
+
+      <!-- Description -->
+      {spot.description && (
+        <p class="text-sm text-[--color-text-secondary] line-clamp-1">
+          {spot.description}
+        </p>
+      )}
+
+      <!-- Divider -->
+      <div class="h-px w-full bg-[--color-border-light] my-1"></div>
+
+      <!-- Footer Row -->
+      <div class="flex items-center justify-between text-sm text-[--color-text-secondary]">
+        <div class="flex items-center gap-3">
+          {spot.priceRange && spot.rating && (
+            <span class="font-semibold text-[--color-text]">{spot.priceRange}</span>
+          )}
+          {spot.walkingDistance && (
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">directions_walk</span>
+              {spot.walkingDistance}
+            </span>
+          )}
+        </div>
+        <span class="text-sm font-bold text-[--color-primary]">Details</span>
+      </div>
+
+      <!-- Tags -->
+      {spot.cuisineType && (
+        <div class="flex gap-2 mt-1">
+          <Badge variant={badgeVariant}>{capitalize(spot.cuisineType)}</Badge>
+        </div>
+      )}
+    </div>
+  </article>
 </a>
 
 <style>
   .spot-card {
     text-decoration: none;
-    color: inherit;
-    overflow: hidden;
-  }
-
-  .spot-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-
-  .spot-card:active {
-    transform: translateY(0);
-  }
-
-  .image-container {
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background-color: #f3f4f6;
-  }
-
-  .spot-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 0.875rem;
-  }
-
-  .name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 0.125rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    background-color: var(--color-primary);
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .badge-secondary {
-    background-color: #e5e7eb;
-    color: #374151;
-  }
-
-  .description {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.4;
+    display: block;
   }
 </style>

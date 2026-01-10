@@ -1,38 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
 import SpotCard from '../components/SpotCard.astro';
-import { getSpots, getCategoryMeta } from '../lib/content';
+import { getSpots } from '../lib/content';
 
-const meta = getCategoryMeta('bars');
 const spots = await getSpots('bars');
 ---
 
-<BaseLayout title={meta?.name || 'Bars'}>
-  <div class="p-4 max-w-md mx-auto pb-safe">
-    <header class="mb-4">
-      <h1 class="text-xl font-bold flex items-center gap-2">
-        <span aria-hidden="true">{meta?.emoji}</span>
-        {meta?.name}
-      </h1>
-      <p class="text-muted text-sm mt-1">{meta?.description}</p>
-    </header>
+<BaseLayout title="Bars">
+  <Header title="Bars & Nightlife" showBack backHref="/explore" />
 
+  <main class="flex flex-col gap-5 px-4 pt-4 pb-4">
+    <!-- Hero Text -->
+    <div class="py-2">
+      <h2 class="text-2xl font-extrabold text-[--color-text] leading-tight">
+        Thirsty?
+        <br />
+        <span class="text-[--color-text-secondary] font-medium text-lg">
+          Best spots to meet travelers.
+        </span>
+      </h2>
+    </div>
+
+    <!-- Spots List -->
     {spots.length > 0 ? (
-      <div class="spots-grid space-y-4">
-        {spots.map(spot => (
-          <SpotCard spot={spot} />
+      <div class="space-y-4">
+        {spots.map((spot, index) => (
+          <SpotCard spot={spot} featured={index === 0} />
         ))}
       </div>
     ) : (
-      <div class="empty-state card p-6 text-center">
-        <p class="text-muted">No bars listed yet.</p>
+      <div class="card p-6 text-center">
+        <p class="text-[--color-text-secondary]">No bars listed yet.</p>
       </div>
     )}
-
-    <div class="mt-6 text-center">
-      <a href="/" class="btn-secondary inline-block">
-        ← Back to Home
-      </a>
-    </div>
-  </div>
+  </main>
 </BaseLayout>

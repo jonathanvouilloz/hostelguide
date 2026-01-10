@@ -132,6 +132,173 @@
 
 ---
 
+### 2026-01-10 | Double Build PagesCMS : Workflow documenté
+
+**Contexte** : PagesCMS déclenche 2 commits séparés (image upload → commit 1, JSON edit → commit 2), causant 2 builds Vercel.
+
+**Décision** : Ajouter `vercel.json` avec règles d'ignore pour les commits d'images seules + documenter le workflow optimal.
+
+**Justification** :
+- Évite les builds inutiles
+- Réduit la consommation de minutes build Vercel
+- Workflow clair pour l'owner
+
+**Alternatives rejetées** :
+- Modifier PagesCMS : Pas de contrôle sur le comportement du CMS
+- Ignorer le problème : Gaspillage de ressources
+
+---
+
+### 2026-01-10 | Images par défaut : Illustrations stylisées par catégorie
+
+**Contexte** : Comment afficher un placeholder quand un spot n'a pas d'image.
+
+**Décision** : Utiliser une illustration flat design spécifique à chaque catégorie (restaurants, bars, laundry, transport, activities).
+
+**Justification** :
+- Plus cohérent visuellement qu'un placeholder gris
+- Indépendant du thème light/dark
+- Communique la catégorie même sans image
+
+**Alternatives rejetées** :
+- Photos stock réalistes : Moins cohérent, style varié
+- Emoji + gradient : Trop simpliste pour le design visé
+
+---
+
+### 2026-01-10 | Google Maps : Bouton principal + Copy secondaire
+
+**Contexte** : Sur la page spot detail, comment présenter les actions liées à l'adresse.
+
+**Décision** : Bouton "Voir sur Google Maps" comme action principale, lien "Copier l'adresse" discret en dessous.
+
+**Justification** :
+- L'action principale est d'ouvrir Maps pour la navigation
+- Copier est une action secondaire
+- Utiliser URL de recherche Google Maps si pas de coordonnées (adresse texte encodée)
+
+**Alternatives rejetées** :
+- Deux boutons égaux : Confusion sur l'action principale
+- Copy seulement : Moins pratique pour la navigation
+
+---
+
+### 2026-01-10 | Thèmes : Light/Dark avec customisation
+
+**Contexte** : Comment permettre aux hostels de personnaliser l'apparence.
+
+**Décision** : 2 presets de base (light/dark) avec customisation de primary color, accent color, et font.
+
+**Structure settings.json** :
+```json
+{
+  "theme": "dark",
+  "primaryColor": "#2563eb",
+  "accentColor": "#f59e0b",
+  "fontFamily": "Inter"
+}
+```
+
+**Justification** :
+- Équilibre entre flexibilité et simplicité
+- Les presets garantissent un design cohérent
+- La customisation permet l'identité de marque
+
+**Alternatives rejetées** :
+- Couleurs uniquement : Pas assez de personnalisation
+- Full custom themes : Trop complexe pour PagesCMS
+
+---
+
+### 2026-01-10 | Horaires détaillés : Pré-remplissage par défaut
+
+**Contexte** : Comment gérer les horaires variables des restaurants (jours fermés, horaires différents).
+
+**Décision** : Structure avec horaire par défaut pré-rempli pour tous les jours, puis exceptions éditables.
+
+**Structure** :
+```json
+{
+  "openingHours": {
+    "default": "11:30-22:00",
+    "exceptions": {
+      "monday": "closed",
+      "sunday": "12:00-20:00"
+    }
+  }
+}
+```
+
+**Justification** :
+- Évite de taper 7 fois les mêmes horaires
+- Seules les exceptions sont à éditer
+- Clair pour l'owner dans PagesCMS
+
+**Alternatives rejetées** :
+- 7 champs séparés : Tedious, répétitif
+- Texte libre : Pas structuré, difficile à afficher proprement
+
+---
+
+### 2026-01-10 | Navigation : Bottom Bar + Back Button
+
+**Contexte** : Comment améliorer la navigation mobile.
+
+**Décision** :
+- Bottom bar fixe avec 4 items : Home / Explore / Events / Infos
+- Back button (←) dans le header sur toutes les pages sauf home
+
+**Justification** :
+- Pattern mobile standard (iOS/Android)
+- Navigation accessible depuis n'importe quelle page
+- Retour explicite sans dépendre du bouton browser
+
+**Alternatives rejetées** :
+- Navigation header seule : Moins accessible
+- Hamburger menu : Cache les options
+
+---
+
+### 2026-01-10 | PWA Install : Modal premier lancement
+
+**Contexte** : Comment encourager les guests à installer la PWA.
+
+**Décision** : Modal explicatif au premier lancement avec instructions différenciées iOS/Android, affiché une seule fois.
+
+**Comportement** :
+- Détection premier lancement via localStorage
+- Instructions visuelles selon la plateforme
+- Bouton "Ne plus afficher"
+
+**Justification** :
+- Le prompt browser natif n'est pas toujours visible
+- Instructions claires améliorent le taux d'installation
+- Une seule fois pour ne pas agacer
+
+**Alternatives rejetées** :
+- Prompt natif uniquement : Taux d'installation faible
+- Banner permanent : Intrusif
+
+---
+
+### 2026-01-10 | Styling : Rester sur Tailwind CSS
+
+**Contexte** : Pour le redesign UI, faut-il passer en CSS custom ?
+
+**Décision** : Continuer avec Tailwind CSS 4.
+
+**Justification** :
+- Tailwind peut reproduire n'importe quel design
+- CSS variables intégrées pour le theming
+- Plus maintenable et cohérent
+- Utilities responsive out-of-the-box
+
+**Alternatives rejetées** :
+- CSS custom pur : Plus verbeux, moins de conventions
+- CSS-in-JS : Overkill pour SSG
+
+---
+
 ## Template pour nouvelles décisions
 
 ```markdown

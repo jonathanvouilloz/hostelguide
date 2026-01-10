@@ -1,39 +1,108 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
 import EventCard from '../components/EventCard.astro';
 import { getUpcomingEvents } from '../lib/content';
 
-const events = await getUpcomingEvents(7);
+const events = await getUpcomingEvents(14);
+
+// Group events by date
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const tomorrow = new Date(today);
+tomorrow.setDate(tomorrow.getDate() + 1);
+
+// Create day filter chips
+const days = [];
+for (let i = 0; i < 7; i++) {
+  const date = new Date(today);
+  date.setDate(date.getDate() + i);
+  const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : date.toLocaleDateString('en-US', { weekday: 'short' });
+  const dayNum = date.getDate();
+  days.push({ date, label: `${dayName}`, num: dayNum });
+}
+
+// Get active day filter
+const url = Astro.url;
+const activeDay = parseInt(url.searchParams.get('day') || '0');
+const activeDate = new Date(today);
+activeDate.setDate(activeDate.getDate() + activeDay);
+
+// Filter events for active day
+const dayEvents = events.filter(event => {
+  const eventDate = new Date(event.date);
+  eventDate.setHours(0, 0, 0, 0);
+  return eventDate.getTime() === activeDate.getTime();
+});
 ---
 
-<BaseLayout title="This Week" description="Upcoming events at the hostel">
-  <div class="p-4 max-w-md mx-auto pb-safe">
-    <header class="mb-4">
-      <h1 class="text-xl font-bold flex items-center gap-2">
-        <span aria-hidden="true">📅</span>
-        This Week
-      </h1>
-      <p class="text-muted text-sm mt-1">Upcoming events and activities</p>
-    </header>
+<BaseLayout title="Events">
+  <Header title="Daily Vibe" showBack backHref="/" rightIcon="notifications" />
 
-    {events.length > 0 ? (
-      <div class="events-list space-y-4">
-        {events.map(event => (
-          <EventCard event={event} />
-        ))}
-      </div>
-    ) : (
-      <div class="empty-state card p-6 text-center">
-        <p class="text-2xl mb-2" aria-hidden="true">📭</p>
-        <p class="font-medium">No events planned</p>
-        <p class="text-muted text-sm mt-1">Check back soon for upcoming activities!</p>
-      </div>
-    )}
-
-    <div class="mt-6 text-center">
-      <a href="/" class="btn-secondary inline-block">
-        ← Back to Home
-      </a>
+  <!-- Day Filter -->
+  <div class="sticky top-16 z-10 w-full overflow-x-auto no-scrollbar bg-[--color-bg] py-3 px-4">
+    <div class="flex gap-2">
+      {days.map((day, index) => (
+        <a
+          href={`/events?day=${index}`}
+          class:list={[
+            'flex flex-col items-center justify-center rounded-xl px-4 py-2 transition-all',
+            activeDay === index
+              ? 'bg-[--color-primary] shadow-[0_0_10px_rgba(19,200,236,0.3)]'
+              : 'bg-[--color-surface]'
+          ]}
+        >
+          <span class:list={[
+            'text-[10px] font-bold uppercase tracking-wider',
+            activeDay === index ? 'text-[--color-bg]' : 'text-[--color-text-secondary]'
+          ]}>
+            {day.label}
+          </span>
+          <span class:list={[
+            'text-lg font-bold',
+            activeDay === index ? 'text-[--color-bg]' : 'text-[--color-text]'
+          ]}>
+            {day.num}
+          </span>
+        </a>
+      ))}
     </div>
   </div>
+
+  <main class="flex flex-col px-4 pt-4 pb-4">
+    <!-- Hero Text -->
+    <div class="py-2 mb-4">
+      <h2 class="text-2xl font-extrabold text-[--color-text] leading-tight">
+        {activeDay === 0 ? "Today's" : activeDay === 1 ? "Tomorrow's" : activeDate.toLocaleDateString('en-US', { weekday: 'long' }) + "'s"} Schedule
+        <br />
+        <span class="text-[--color-text-secondary] font-medium text-lg">
+          {dayEvents.length} {dayEvents.length === 1 ? 'event' : 'events'} planned
+        </span>
+      </h2>
+    </div>
+
+    <!-- Events Timeline -->
+    {dayEvents.length > 0 ? (
+      <div class="relative">
+        <!-- Timeline line -->
+        <div class="absolute left-[22px] top-8 bottom-8 w-[2px] bg-[--color-border-light]"></div>
+
+        <!-- Events -->
+        <div class="flex flex-col gap-6">
+          {dayEvents.map((event, index) => (
+            <EventCard event={event} showTimelineNode={true} isFirst={index === 0} />
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div class="card p-8 text-center mt-4">
+        <div class="flex size-16 items-center justify-center rounded-full bg-[--color-surface-input] mx-auto mb-4">
+          <span class="material-symbols-outlined text-[32px] text-[--color-text-secondary]">event_busy</span>
+        </div>
+        <p class="font-bold text-[--color-text]">No events planned</p>
+        <p class="text-sm text-[--color-text-secondary] mt-1">Check back soon for activities!</p>
+      </div>
+    )}
+  </main>
 </BaseLayout>

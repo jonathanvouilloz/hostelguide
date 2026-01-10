@@ -1,14 +1,14 @@
 ---
 import '../styles/global.css';
 import { getSettings } from '../lib/content';
-import Header from '../components/Header.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  showNav?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, showNav = true } = Astro.props;
 
 const settings = await getSettings();
 
@@ -18,12 +18,8 @@ const pageTitle = title
 
 const pageDescription = description || `Welcome to ${settings.hostelName} - Your digital guide`;
 
-const cssVariables = `
-  :root {
-    --color-primary: ${settings.primaryColor};
-    --color-accent: ${settings.accentColor};
-  }
-`;
+// BLACK theme color for status bar
+const themeColor = '#101f22';
 ---
 
 <!doctype html>
@@ -33,10 +29,11 @@ const cssVariables = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={pageDescription} />
 
-    <meta name="theme-color" content={settings.primaryColor} />
+    <!-- Theme color for BLACK theme -->
+    <meta name="theme-color" content={themeColor} />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content={settings.hostelName} />
 
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -44,23 +41,117 @@ const cssVariables = `
 
     <link rel="manifest" href="/manifest.json" />
 
-    <title>{pageTitle}</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
 
-    <style set:html={cssVariables}></style>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <title>{pageTitle}</title>
   </head>
 
-  <body class="min-h-screen bg-gray-50">
+  <body class="min-h-screen antialiased overflow-x-hidden">
     <a
       href="#main"
-      class="sr-only sr-only-focusable fixed top-4 left-4 z-50 bg-primary text-white px-4 py-2 rounded-lg"
+      class="sr-only sr-only-focusable fixed top-4 left-4 z-50 bg-primary px-4 py-2 rounded-lg"
+      style="color: var(--color-bg);"
     >
       Skip to main content
     </a>
 
-    <Header />
-
     <main id="main">
       <slot />
     </main>
+
+    {showNav && (
+      <nav class="bottom-nav">
+        <a href="/" class="nav-item" data-page="home">
+          <span class="material-symbols-outlined">home</span>
+          <span class="nav-label">Home</span>
+        </a>
+        <a href="/explore" class="nav-item" data-page="explore">
+          <span class="material-symbols-outlined">explore</span>
+          <span class="nav-label">Explore</span>
+        </a>
+        <a href="/events" class="nav-item" data-page="events">
+          <span class="material-symbols-outlined">calendar_month</span>
+          <span class="nav-label">Events</span>
+        </a>
+        <a href="/info" class="nav-item" data-page="info">
+          <span class="material-symbols-outlined">menu_book</span>
+          <span class="nav-label">Info</span>
+        </a>
+      </nav>
+    )}
+
+    <script>
+      // Highlight active nav item based on current path
+      const currentPath = window.location.pathname;
+      const navItems = document.querySelectorAll('.nav-item');
+
+      navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        const isActive = href === '/'
+          ? currentPath === '/'
+          : currentPath.startsWith(href || '');
+
+        if (isActive) {
+          item.classList.add('active');
+          const icon = item.querySelector('.material-symbols-outlined');
+          if (icon) icon.classList.add('filled');
+        }
+      });
+    </script>
+
+    <style>
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: var(--bottom-nav-height);
+        background-color: rgba(16, 31, 34, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid var(--color-border);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem;
+        color: var(--color-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .nav-item:hover {
+        color: var(--color-text-secondary);
+      }
+
+      .nav-item.active {
+        color: var(--color-primary);
+      }
+
+      .nav-item .material-symbols-outlined {
+        font-size: 24px;
+      }
+
+      .nav-label {
+        font-size: 0.625rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    </style>
   </body>
 </html>

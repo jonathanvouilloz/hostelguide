@@ -1,0 +1,38 @@
+---
+/**
+ * FilterChip component - Filter buttons for categories
+ */
+interface Props {
+  label: string;
+  active?: boolean;
+  href?: string;
+  class?: string;
+}
+
+const { label, active = false, href, class: className = '' } = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+
+const baseClasses = 'flex h-9 shrink-0 items-center justify-center rounded-xl px-5 transition-all active:scale-95';
+
+const activeClasses = active
+  ? 'bg-[--color-primary] shadow-[0_0_10px_rgba(19,200,236,0.3)]'
+  : 'bg-[--color-surface-input]';
+
+const textClasses = active
+  ? 'text-[--color-bg] font-bold'
+  : 'text-[--color-text] font-medium';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    baseClasses,
+    activeClasses,
+    className
+  ]}
+>
+  <span class:list={['text-sm', textClasses]}>
+    {label}
+  </span>
+</Tag>

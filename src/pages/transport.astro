@@ -1,38 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
 import SpotCard from '../components/SpotCard.astro';
-import { getSpots, getCategoryMeta } from '../lib/content';
+import { getSpots } from '../lib/content';
 
-const meta = getCategoryMeta('transport');
 const spots = await getSpots('transport');
 ---
 
-<BaseLayout title={meta?.name || 'Transport'}>
-  <div class="p-4 max-w-md mx-auto pb-safe">
-    <header class="mb-4">
-      <h1 class="text-xl font-bold flex items-center gap-2">
-        <span aria-hidden="true">{meta?.emoji}</span>
-        {meta?.name}
-      </h1>
-      <p class="text-muted text-sm mt-1">{meta?.description}</p>
-    </header>
+<BaseLayout title="Transport">
+  <Header title="Transport" showBack backHref="/explore" />
 
+  <main class="flex flex-col gap-5 px-4 pt-4 pb-4">
+    <!-- Hero Text -->
+    <div class="py-2">
+      <h2 class="text-2xl font-extrabold text-[--color-text] leading-tight">
+        Getting Around
+        <br />
+        <span class="text-[--color-text-secondary] font-medium text-lg">
+          Bikes, buses & more.
+        </span>
+      </h2>
+    </div>
+
+    <!-- Spots List -->
     {spots.length > 0 ? (
-      <div class="spots-grid space-y-4">
+      <div class="space-y-4">
         {spots.map(spot => (
           <SpotCard spot={spot} />
         ))}
       </div>
     ) : (
-      <div class="empty-state card p-6 text-center">
-        <p class="text-muted">No transport services listed yet.</p>
+      <div class="card p-6 text-center">
+        <p class="text-[--color-text-secondary]">No transport services listed yet.</p>
       </div>
     )}
-
-    <div class="mt-6 text-center">
-      <a href="/" class="btn-secondary inline-block">
-        ← Back to Home
-      </a>
-    </div>
-  </div>
+  </main>
 </BaseLayout>

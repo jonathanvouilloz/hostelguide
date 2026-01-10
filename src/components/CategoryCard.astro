@@ -1,45 +1,73 @@
 ---
+/**
+ * CategoryCard - Explore grid card with image background
+ * Redesigned for BLACK theme
+ */
 interface Props {
-  emoji: string;
+  icon: string;
   label: string;
+  subtitle?: string;
   href: string;
-  fullWidth?: boolean;
+  image?: string;
+  aspectRatio?: '4/5' | 'square';
 }
 
-const { emoji, label, href, fullWidth = false } = Astro.props;
+const {
+  icon,
+  label,
+  subtitle,
+  href,
+  image,
+  aspectRatio = '4/5'
+} = Astro.props;
+
+const aspectClass = aspectRatio === 'square' ? 'aspect-square' : 'aspect-[4/5]';
+
+// Default gradient background if no image
+const bgStyle = image
+  ? `background-image: url("${image}");`
+  : 'background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-input) 100%);';
 ---
 
 <a
   href={href}
   class:list={[
-    'category-card card touch-target flex items-center gap-3 p-4 transition-all',
-    { 'full-width': fullWidth }
+    'category-card group relative overflow-hidden rounded-2xl bg-gray-800 cursor-pointer',
+    aspectClass
   ]}
 >
-  <span class="emoji text-2xl" aria-hidden="true">{emoji}</span>
-  <span class="label font-medium">{label}</span>
-  <span class="arrow ml-auto text-muted" aria-hidden="true">›</span>
+  <!-- Background Image -->
+  <div
+    class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+    style={bgStyle}
+  ></div>
+
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+  <!-- Content -->
+  <div class="absolute bottom-0 left-0 p-4">
+    <!-- Icon Circle -->
+    <div class="mb-2 flex size-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white">
+      <span class="material-symbols-outlined text-[14px]">{icon}</span>
+    </div>
+
+    <!-- Label -->
+    <p class="text-base font-bold text-white leading-tight">{label}</p>
+
+    <!-- Subtitle -->
+    {subtitle && (
+      <p class="text-xs text-gray-300 mt-1">{subtitle}</p>
+    )}
+  </div>
 </a>
 
 <style>
   .category-card {
     text-decoration: none;
-    color: inherit;
-  }
-
-  .category-card:hover {
-    background-color: #f9fafb;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .category-card:active {
-    transform: translateY(0);
-    background-color: #f3f4f6;
-  }
-
-  .arrow {
-    font-size: 1.5rem;
-    font-weight: 300;
+    transform: scale(0.98);
   }
 </style>

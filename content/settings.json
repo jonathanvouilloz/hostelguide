@@ -15,5 +15,12 @@
     { "name": "Tourist Police", "phone": "1155" },
     { "name": "Hospital (Ram)", "phone": "+6653920300" }
   ],
-  "timezone": "Asia/Bangkok"
+  "timezone": "Asia/Bangkok",
+  "heroImage": "/images/hero-hostel.jpg",
+  "categoryImages": {
+    "food": "/images/category-food.jpg",
+    "activities": "/images/category-activities.jpg",
+    "services": "/images/category-services.jpg",
+    "bars": "/images/category-bars.jpg"
+  }
 }

@@ -63,6 +63,37 @@ content:
         label: Timezone
         type: string
         description: "e.g. Asia/Bangkok"
+      - name: heroImage
+        label: Homepage Hero Image
+        type: image
+        options:
+          path: public/images
+        description: "Main background image on the homepage"
+      - name: categoryImages
+        label: Category Images
+        type: object
+        description: "Background images for explore cards on homepage"
+        fields:
+          - name: food
+            label: Food & Drink
+            type: image
+            options:
+              path: public/images
+          - name: activities
+            label: Activities
+            type: image
+            options:
+              path: public/images
+          - name: services
+            label: Services
+            type: image
+            options:
+              path: public/images
+          - name: bars
+            label: Bars & Nightlife
+            type: image
+            options:
+              path: public/images
 
   - name: house-rules
     label: "📋 House Rules"

@@ -12,6 +12,13 @@ export interface EmergencyContact {
   phone: string;
 }
 
+export interface CategoryImages {
+  food?: string;
+  activities?: string;
+  services?: string;
+  bars?: string;
+}
+
 export interface Settings {
   hostelName: string;
   logo: string;
@@ -23,6 +30,8 @@ export interface Settings {
   contactWhatsApp: string;
   emergencyContacts: EmergencyContact[];
   timezone: string;
+  heroImage?: string;
+  categoryImages?: CategoryImages;
 }
 
 // ============================================
@@ -66,6 +75,10 @@ export interface Spot {
   phone?: string;
   openingHours?: string;
   tags?: string[];
+  // New properties for redesign
+  tagline?: string;
+  rating?: string;
+  walkingDistance?: string;
 }
 
 export interface SpotsFile {

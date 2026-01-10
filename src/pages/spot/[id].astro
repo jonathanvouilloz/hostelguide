@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getAllSpots, getCategoryMeta } from '../../lib/content';
+import Header from '../../components/Header.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { getAllSpots } from '../../lib/content';
 import { getDirectionsUrl } from '../../lib/deeplinks';
 import type { Spot, SpotCategory } from '../../lib/types';
 
@@ -26,7 +28,6 @@ interface Props {
 }
 
 const { spot, category } = Astro.props;
-const categoryMeta = getCategoryMeta(category);
 
 // Support both coordinates and location (PagesCMS compatibility)
 const coords = spot.coordinates || spot.location;
@@ -37,57 +38,80 @@ function capitalize(str: string): string {
 }
 ---
 
-<BaseLayout title={spot.name} description={spot.description}>
-  <div class="spot-detail pb-24">
-    <!-- Back button -->
-    <a href={`/${category}`} class="back-link flex items-center gap-2 p-4 text-sm font-medium">
-      <span aria-hidden="true">←</span>
-      Back to {categoryMeta?.name}
-    </a>
+<BaseLayout title={spot.name} description={spot.description} showNav={false}>
+  <Header
+    title={spot.name}
+    showBack
+    backHref={`/${category}`}
+    transparent
+  />
 
-    <!-- Image -->
-    <div class="image-container">
+  <div class="spot-detail pb-28">
+    <!-- Hero Image -->
+    <div class="relative h-64 w-full -mt-16">
       {spot.image ? (
-        <img
-          src={spot.image}
-          alt={spot.name}
-          class="spot-image"
-        />
+        <div
+          class="absolute inset-0 bg-cover bg-center"
+          style={`background-image: linear-gradient(to bottom, transparent 0%, rgba(16, 31, 34, 0.6) 70%, rgba(16, 31, 34, 1) 100%), url("${spot.image}");`}
+        ></div>
       ) : (
-        <div class="placeholder" aria-hidden="true">
-          <span>No image</span>
+        <div class="absolute inset-0 bg-[--color-surface-input] flex items-center justify-center">
+          <span class="material-symbols-outlined text-[64px] text-[--color-text-secondary]/30">image</span>
         </div>
       )}
+
+      <!-- Badges on image -->
+      <div class="absolute bottom-4 left-4 flex items-center gap-2">
+        {spot.cuisineType && (
+          <Badge variant="info">{capitalize(spot.cuisineType)}</Badge>
+        )}
+        {spot.priceRange && (
+          <Badge variant="default">{spot.priceRange}</Badge>
+        )}
+      </div>
     </div>
 
     <!-- Content -->
-    <div class="content p-4 space-y-4">
+    <div class="px-4 pt-4 space-y-5">
       <!-- Header -->
       <header>
-        <h1 class="text-2xl font-bold">{spot.name}</h1>
-        <div class="badges flex items-center gap-2 mt-2">
-          {spot.cuisineType && (
-            <span class="badge">{capitalize(spot.cuisineType)}</span>
+        <h1 class="text-2xl font-bold text-[--color-text]">{spot.name}</h1>
+        {spot.tagline && (
+          <p class="text-[--color-primary] font-medium mt-1">{spot.tagline}</p>
+        )}
+
+        <!-- Meta row -->
+        <div class="flex items-center gap-4 mt-3 text-sm text-[--color-text-secondary]">
+          {spot.rating && (
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-yellow-400 text-[18px] filled">star</span>
+              <span class="font-bold text-[--color-text]">{spot.rating}</span>
+            </div>
           )}
-          {spot.priceRange && (
-            <span class="badge badge-price">{spot.priceRange}</span>
+          {spot.walkingDistance && (
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-[18px]">directions_walk</span>
+              <span>{spot.walkingDistance}</span>
+            </div>
           )}
         </div>
       </header>
 
       <!-- Description -->
-      <p class="description text-base leading-relaxed">
+      <p class="text-base leading-relaxed text-[--color-text-secondary]">
         {spot.description}
       </p>
 
-      <!-- Address -->
+      <!-- Address Card -->
       {spot.address && (
-        <div class="address-section card p-4">
+        <div class="card p-4">
           <div class="flex items-start gap-3">
-            <span class="icon" aria-hidden="true">📍</span>
-            <div>
-              <p class="font-medium">Address</p>
-              <p class="text-muted text-sm mt-1">{spot.address}</p>
+            <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+              <span class="material-symbols-outlined">location_on</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-[--color-text]">Address</p>
+              <p class="text-sm text-[--color-text-secondary] mt-1">{spot.address}</p>
             </div>
           </div>
         </div>
@@ -95,9 +119,9 @@ function capitalize(str: string): string {
 
       <!-- Tags -->
       {spot.tags && spot.tags.length > 0 && (
-        <div class="tags flex flex-wrap gap-2">
+        <div class="flex flex-wrap gap-2">
           {spot.tags.map(tag => (
-            <span class="tag">#{tag}</span>
+            <span class="text-sm text-[--color-primary]">#{tag}</span>
           ))}
         </div>
       )}
@@ -105,27 +129,32 @@ function capitalize(str: string): string {
 
     <!-- Sticky action buttons -->
     <div class="action-bar">
-      {directionsUrl ? (
+      {directionsUrl && (
         <a
           href={directionsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          class="action-btn primary touch-target"
+          class="btn-primary flex-1 touch-target"
         >
-          <span class="icon" aria-hidden="true">🗺️</span>
-          <span>Directions</span>
+          <span class="material-symbols-outlined text-[20px]">directions</span>
+          <span>Get Directions</span>
         </a>
-      ) : null}
+      )}
       <button
         type="button"
-        class="action-btn secondary touch-target copy-btn"
+        class="btn-secondary copy-btn touch-target"
         data-address={spot.address}
         aria-label="Copy address to clipboard"
       >
-        <span class="icon" aria-hidden="true">📋</span>
-        <span class="copy-text">Copy Address</span>
+        <span class="material-symbols-outlined text-[20px]">content_copy</span>
       </button>
     </div>
+  </div>
+
+  <!-- Copy feedback toast -->
+  <div id="copy-toast" class="copy-toast">
+    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+    Copied!
   </div>
 </BaseLayout>
 
@@ -133,18 +162,15 @@ function capitalize(str: string): string {
   document.querySelectorAll('.copy-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const address = btn.getAttribute('data-address');
-      const textEl = btn.querySelector('.copy-text');
+      const toast = document.getElementById('copy-toast');
 
-      if (!address || !textEl) return;
+      if (!address || !toast) return;
 
       try {
         await navigator.clipboard.writeText(address);
-        textEl.textContent = 'Copied!';
-        btn.classList.add('copied');
-
+        toast.classList.add('show');
         setTimeout(() => {
-          textEl.textContent = 'Copy Address';
-          btn.classList.remove('copied');
+          toast.classList.remove('show');
         }, 2000);
       } catch (err) {
         console.error('Failed to copy:', err);
@@ -154,57 +180,6 @@ function capitalize(str: string): string {
 </script>
 
 <style>
-  .back-link {
-    color: var(--color-primary);
-    text-decoration: none;
-  }
-
-  .back-link:hover {
-    text-decoration: underline;
-  }
-
-  .image-container {
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background-color: #f3f4f6;
-  }
-
-  .spot-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #9ca3af;
-    font-size: 1rem;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    background-color: #e5e7eb;
-    color: #374151;
-  }
-
-  .badge-price {
-    background-color: var(--color-primary);
-    color: white;
-  }
-
-  .tag {
-    font-size: 0.875rem;
-    color: var(--color-primary);
-  }
-
   .action-bar {
     position: fixed;
     bottom: 0;
@@ -213,52 +188,34 @@ function capitalize(str: string): string {
     display: flex;
     gap: 0.75rem;
     padding: 1rem;
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
-    background-color: white;
-    border-top: 1px solid #e5e7eb;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+    background: linear-gradient(to top, var(--color-bg) 80%, transparent);
+    z-index: 40;
   }
 
-  .action-btn {
-    flex: 1;
+  .copy-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
-    padding: 0.875rem 1rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition: all 0.15s ease;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 100;
   }
 
-  .action-btn.primary {
-    background-color: var(--color-primary);
-    color: white;
-  }
-
-  .action-btn.primary:hover {
-    filter: brightness(1.1);
-  }
-
-  .action-btn.secondary {
-    background-color: #f3f4f6;
-    color: #374151;
-  }
-
-  .action-btn.secondary:hover {
-    background-color: #e5e7eb;
-  }
-
-  .action-btn.secondary.copied {
-    background-color: #10b981;
-    color: white;
-  }
-
-  .icon {
-    font-size: 1.125rem;
+  .copy-toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
   }
 </style>
