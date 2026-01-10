@@ -11,12 +11,21 @@
   "checkOut": "11:00",
   "contactWhatsApp": "+66812345678",
   "emergencyContacts": [
-    { "name": "Hostel Reception", "phone": "+66812345678" },
-    { "name": "Tourist Police", "phone": "1155" },
-    { "name": "Hospital (Ram)", "phone": "+6653920300" }
+    {
+      "name": "Hostel Reception",
+      "phone": "+66812345678"
+    },
+    {
+      "name": "Tourist Police",
+      "phone": "1155"
+    },
+    {
+      "name": "Hospital (Ram)",
+      "phone": "+6653920300"
+    }
   ],
   "timezone": "Asia/Bangkok",
-  "heroImage": "/images/hero-hostel.jpg",
+  "heroImage": "public/images/743387685.jpg",
   "categoryImages": {
     "food": "/images/category-food.jpg",
     "activities": "/images/category-activities.jpg",
