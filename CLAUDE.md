@@ -50,6 +50,46 @@ npm run check       # Vérification TypeScript
 - **Pas de `any`** en TypeScript
 - **Langue UI** : Anglais uniquement (pas d'i18n pour MVP)
 
+## Utilitaires disponibles
+
+### Géolocalisation (`src/lib/geolocation.ts`)
+
+Calcul de distance entre l'utilisateur et les spots. **Utiliser sur toutes les pages qui affichent des spots.**
+
+```typescript
+import { initDistanceDisplay } from '../lib/geolocation';
+
+// Dans un <script> client-side
+initDistanceDisplay();
+```
+
+**Fonctions disponibles :**
+- `initDistanceDisplay()` - Met à jour automatiquement tous les éléments avec distance
+- `calculateDistance(lat1, lng1, lat2, lng2)` - Formule Haversine (retourne mètres)
+- `formatDistance(meters)` - Formate "200m" ou "1.2km"
+- `getUserLocation()` - Récupère position utilisateur
+
+**Classes CSS requises dans le HTML :**
+- `.distance-display[data-lat][data-lng]` - Élément qui affichera la distance
+- `.distance-separator` - Séparateur optionnel (affiché quand distance disponible)
+- `.distance-badge[data-lat][data-lng]` - Badge sur les cards (pour les listes)
+
+### Horaires d'ouverture (`src/lib/openingHours.ts`)
+
+Vérification si un spot est ouvert et formatage des horaires.
+
+```typescript
+import { isOpen, getFormattedHours, getTodayHours } from '../lib/openingHours';
+
+isOpen(spot.openingHours);           // true | false | null
+getTodayHours(spot.openingHours);    // "11:30-22:00" | "Closed today" | null
+getFormattedHours(spot.openingHours); // Array des 7 jours avec horaires
+```
+
+**Supporte deux formats :**
+- Simple : `"11:30-22:00"`
+- Détaillé : `{ default: "11:30-22:00", exceptions: { monday: "closed" } }`
+
 ## Pointeurs documentation
 
 | Fichier | Description |

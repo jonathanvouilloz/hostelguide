@@ -25,8 +25,8 @@ const spots = await getSpots('bars');
     <!-- Spots List -->
     {spots.length > 0 ? (
       <div class="space-y-4">
-        {spots.map((spot, index) => (
-          <SpotCard spot={spot} featured={index === 0} />
+        {spots.map((spot) => (
+          <SpotCard spot={spot} />
         ))}
       </div>
     ) : (
@@ -36,3 +36,8 @@ const spots = await getSpots('bars');
     )}
   </main>
 </BaseLayout>
+
+<script>
+  import { initDistanceDisplay } from '../lib/geolocation';
+  initDistanceDisplay();
+</script>

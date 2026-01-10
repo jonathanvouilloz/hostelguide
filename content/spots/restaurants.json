@@ -3,11 +3,16 @@
     {
       "id": "pad-thai-heaven",
       "name": "JJ Pad Thai",
+      "tagline": "Best pad thai near the hostel 🍜",
       "description": "Best pad thai near the hostel. They have also other dishes.",
       "cuisineType": "thai",
       "priceRange": "€",
       "address": "Jed Yod-Chang Khian Rd, Tambon Chang Phueak, Mueang Chiang Mai District, Chiang Mai 50300",
-      "image": "public/images/spots/jj.jpg",
+      "location": {
+        "lat": 18.8023,
+        "lng": 98.9678
+      },
+      "image": "/images/spots/jj.jpg",
       "phone": "0821960265",
       "openingHours": "00:00 - 24:00"
     }

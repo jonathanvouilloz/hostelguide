@@ -62,6 +62,13 @@ export type CuisineType =
 
 export type PriceRange = '€' | '€€' | '€€€';
 
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+export interface OpeningHoursDetailed {
+  default: string; // e.g., "11:30-22:00"
+  exceptions?: Partial<Record<DayOfWeek, string>>; // e.g., { monday: "closed", sunday: "12:00-20:00" }
+}
+
 export interface Spot {
   id: string;
   name: string;
@@ -73,7 +80,7 @@ export interface Spot {
   coordinates?: Coordinates;
   location?: Coordinates; // Alias for PagesCMS compatibility
   phone?: string;
-  openingHours?: string;
+  openingHours?: string | OpeningHoursDetailed; // Support both simple and detailed format
   tags?: string[];
   // New properties for redesign
   tagline?: string;

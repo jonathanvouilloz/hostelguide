@@ -1,41 +1,34 @@
 ---
 /**
  * SpotCard - Restaurant/Bar/Service listing card
- * Redesigned for BLACK theme
+ * Redesigned with OPEN/CLOSED badge and distance overlay
  */
 import type { Spot } from '../lib/types';
-import Badge from './ui/Badge.astro';
+import { isOpen } from '../lib/openingHours';
 
 interface Props {
   spot: Spot;
-  featured?: boolean;
 }
 
-const { spot, featured = false } = Astro.props;
+const { spot } = Astro.props;
 
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
-}
+// Check if spot is currently open
+const openStatus = isOpen(spot.openingHours);
 
-// Map cuisine types to badge variants
-const cuisineBadgeVariant: Record<string, 'purple' | 'success' | 'warning' | 'info'> = {
-  thai: 'warning',
-  western: 'info',
-  japanese: 'purple',
-  vegetarian: 'success',
-  indian: 'warning',
-  default: 'info',
-};
-
-const badgeVariant = spot.cuisineType
-  ? cuisineBadgeVariant[spot.cuisineType] || cuisineBadgeVariant.default
-  : 'info';
+// Get coordinates for distance calculation (client-side)
+const coords = spot.coordinates || spot.location;
 ---
 
-<a href={`/spot/${spot.id}`} class="spot-card group">
-  <article class="relative flex flex-col overflow-hidden rounded-2xl bg-[--color-surface] shadow-sm border border-[--color-border] transition-transform active:scale-[0.99]">
+<a href={`/spot/${spot.id}`} class="spot-card group" data-cuisine={spot.cuisineType || ''}>
+  <article class="relative flex flex-col overflow-hidden rounded-xl bg-white/5 transition-transform active:scale-[0.99]">
+    <!-- Closed overlay (full card) -->
+    {openStatus === false && (
+      <div class="absolute inset-0 bg-black/70 z-10 flex items-center justify-center rounded-xl">
+        <span class="text-white text-lg font-bold uppercase tracking-wide">Closed</span>
+      </div>
+    )}
     <!-- Image -->
-    <div class:list={['relative w-full overflow-hidden', featured ? 'h-48' : 'h-40']}>
+    <div class="relative w-full h-44 overflow-hidden">
       {spot.image ? (
         <div
           class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
@@ -43,88 +36,55 @@ const badgeVariant = spot.cuisineType
         ></div>
       ) : (
         <div class="absolute inset-0 bg-[--color-surface-input] flex items-center justify-center">
-          <span class="material-symbols-outlined text-[48px] text-[--color-text-secondary]/30">image</span>
+          <span class="material-symbols-outlined text-[48px] text-[--color-text-secondary]/30">restaurant</span>
         </div>
       )}
 
-      <!-- Gradient overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-[--color-surface]/90 to-transparent opacity-60"></div>
+      <!-- Gradient overlay bottom (for distance badge visibility) -->
+      <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-      <!-- Featured Badge -->
-      {featured && (
-        <div class="absolute left-4 top-4 flex items-center gap-1 rounded-lg bg-[--color-primary] px-3 py-1.5 shadow-lg">
-          <span class="material-symbols-outlined text-[--color-bg] text-[16px]">verified</span>
-          <span class="text-xs font-bold text-[--color-bg] tracking-wide uppercase">Staff Pick</span>
-        </div>
-      )}
-
-      <!-- Distance Badge -->
-      {spot.walkingDistance && (
-        <div class="absolute bottom-3 right-3 rounded-lg bg-black/60 backdrop-blur-sm px-2.5 py-1">
-          <span class="text-xs font-bold text-white">{spot.walkingDistance}</span>
+      <!-- Distance Badge (populated by client-side JS) -->
+      {coords && (
+        <div
+          class="distance-badge absolute bottom-3 right-3 rounded-lg bg-black/60 backdrop-blur-sm px-2.5 py-1 hidden"
+          data-lat={coords.lat}
+          data-lng={coords.lng}
+        >
+          <span class="text-xs font-bold text-white distance-value"></span>
         </div>
       )}
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col gap-2 p-4">
-      <!-- Title Row -->
-      <div class="flex justify-between items-start">
-        <div class="flex-1 min-w-0">
-          <h3 class="text-lg font-bold text-[--color-text] leading-tight truncate">{spot.name}</h3>
-          {spot.tagline && (
-            <p class="text-sm font-medium text-[--color-primary] mt-1">{spot.tagline}</p>
-          )}
-        </div>
+    <div class="flex flex-col gap-1.5 p-4">
+      <!-- Title -->
+      <h3 class="text-base font-bold text-[--color-text] leading-tight">{spot.name}</h3>
 
-        <!-- Rating -->
-        {spot.rating && (
-          <div class="flex h-8 items-center justify-center rounded-lg bg-[--color-surface-input] px-2.5 ml-2 shrink-0">
-            <span class="text-xs font-bold text-[--color-text]">{spot.rating}</span>
-            <span class="material-symbols-outlined ml-1 text-yellow-400 text-[14px] filled">star</span>
-          </div>
-        )}
-
-        <!-- Price (fallback if no rating) -->
-        {!spot.rating && spot.priceRange && (
-          <span class="font-semibold text-[--color-text-secondary] ml-2 shrink-0">
-            {spot.priceRange}
-          </span>
-        )}
-      </div>
-
-      <!-- Description -->
-      {spot.description && (
-        <p class="text-sm text-[--color-text-secondary] line-clamp-1">
-          {spot.description}
+      <!-- Description/Tagline -->
+      {(spot.tagline || spot.description) && (
+        <p class="text-sm text-primary line-clamp-1">
+          {spot.tagline || spot.description}
         </p>
       )}
 
-      <!-- Divider -->
-      <div class="h-px w-full bg-[--color-border-light] my-1"></div>
+      <!-- Separator -->
+      <div class="h-px w-full bg-white/10 my-2"></div>
 
       <!-- Footer Row -->
-      <div class="flex items-center justify-between text-sm text-[--color-text-secondary]">
-        <div class="flex items-center gap-3">
-          {spot.priceRange && spot.rating && (
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center gap-2 text-[--color-text-secondary]">
+          {spot.priceRange && (
             <span class="font-semibold text-[--color-text]">{spot.priceRange}</span>
           )}
-          {spot.walkingDistance && (
-            <span class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-[16px]">directions_walk</span>
-              {spot.walkingDistance}
+          {coords && (
+            <span class="distance-text flex items-center gap-1 hidden">
+              <span class="material-symbols-outlined" style="font-size: 14px;">directions_walk</span>
+              <span class="distance-value-text"></span>
             </span>
           )}
         </div>
-        <span class="text-sm font-bold text-[--color-primary]">Details</span>
+        <span class="text-sm font-bold text-primary">Details</span>
       </div>
-
-      <!-- Tags -->
-      {spot.cuisineType && (
-        <div class="flex gap-2 mt-1">
-          <Badge variant={badgeVariant}>{capitalize(spot.cuisineType)}</Badge>
-        </div>
-      )}
     </div>
   </article>
 </a>

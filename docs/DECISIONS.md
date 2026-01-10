@@ -299,6 +299,39 @@
 
 ---
 
+### 2026-01-11 | Géolocalisation : Fonction utilitaire partagée
+
+**Contexte** : Calcul de distance utilisateur-spot utilisé sur plusieurs pages (liste restaurants, bars, detail spot, etc.).
+
+**Décision** : Créer `src/lib/geolocation.ts` avec fonction `initDistanceDisplay()` réutilisable.
+
+**Structure** :
+```typescript
+// Utilisation dans une page Astro
+<script>
+  import { initDistanceDisplay } from '../lib/geolocation';
+  initDistanceDisplay();
+</script>
+```
+
+**Fonctionnement** :
+- Détecte automatiquement les éléments avec classes `.distance-display` ou `.distance-badge`
+- Lit les attributs `data-lat` et `data-lng` pour les coordonnées du spot
+- Demande la géolocalisation une seule fois (cache 5 min)
+- Met à jour tous les éléments trouvés avec la distance formatée
+
+**Justification** :
+- Code DRY (évite duplication sur chaque page)
+- API simple : un seul appel suffit
+- Gestion centralisée des erreurs et du cache
+- Facile à étendre pour de nouvelles pages
+
+**Alternatives rejetées** :
+- Script inline par page : Duplication, maintenance difficile
+- Composant Astro avec script : Moins flexible pour différents layouts
+
+---
+
 ## Template pour nouvelles décisions
 
 ```markdown

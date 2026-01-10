@@ -132,6 +132,10 @@ content:
             label: Name
             type: string
             required: true
+          - name: tagline
+            label: Tagline
+            type: string
+            description: "Short catchy description (e.g. 'Best pad thai in town 🍜')"
           - name: description
             label: Description
             type: text
@@ -181,8 +185,40 @@ content:
             type: string
           - name: openingHours
             label: Opening Hours
-            type: string
-            description: "e.g. 10:00-22:00"
+            type: object
+            description: "Default hours + exceptions per day"
+            fields:
+              - name: default
+                label: Default Hours
+                type: string
+                description: "e.g. 11:30-22:00 (applies to all days)"
+              - name: exceptions
+                label: Exceptions
+                type: object
+                description: "Override for specific days"
+                fields:
+                  - name: monday
+                    label: Monday
+                    type: string
+                    description: "Leave empty for default, 'closed' if closed"
+                  - name: tuesday
+                    label: Tuesday
+                    type: string
+                  - name: wednesday
+                    label: Wednesday
+                    type: string
+                  - name: thursday
+                    label: Thursday
+                    type: string
+                  - name: friday
+                    label: Friday
+                    type: string
+                  - name: saturday
+                    label: Saturday
+                    type: string
+                  - name: sunday
+                    label: Sunday
+                    type: string
 
   - name: bars
     label: "🍺 Bars"

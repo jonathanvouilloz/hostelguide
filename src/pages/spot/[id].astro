@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
-import Badge from '../../components/ui/Badge.astro';
 import { getAllSpots } from '../../lib/content';
 import { getDirectionsUrl } from '../../lib/deeplinks';
+import { getFormattedHours, getTodayHours, isOpen } from '../../lib/openingHours';
 import type { Spot, SpotCategory } from '../../lib/types';
 
 export async function getStaticPaths() {
@@ -33,6 +33,11 @@ const { spot, category } = Astro.props;
 const coords = spot.coordinates || spot.location;
 const directionsUrl = coords ? getDirectionsUrl(coords.lat, coords.lng) : null;
 
+// Opening hours
+const formattedHours = getFormattedHours(spot.openingHours);
+const todayHours = getTodayHours(spot.openingHours);
+const openStatus = isOpen(spot.openingHours);
+
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
 }
@@ -46,9 +51,12 @@ function capitalize(str: string): string {
     transparent
   />
 
-  <div class="spot-detail pb-28">
+  <div class="spot-detail pb-20">
     <!-- Hero Image -->
     <div class="relative h-64 w-full -mt-16">
+      <!-- Gradient overlay at top for header readability -->
+      <div class="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/70 to-transparent z-10 pointer-events-none"></div>
+
       {spot.image ? (
         <div
           class="absolute inset-0 bg-cover bg-center"
@@ -59,16 +67,6 @@ function capitalize(str: string): string {
           <span class="material-symbols-outlined text-[64px] text-[--color-text-secondary]/30">image</span>
         </div>
       )}
-
-      <!-- Badges on image -->
-      <div class="absolute bottom-4 left-4 flex items-center gap-2">
-        {spot.cuisineType && (
-          <Badge variant="info">{capitalize(spot.cuisineType)}</Badge>
-        )}
-        {spot.priceRange && (
-          <Badge variant="default">{spot.priceRange}</Badge>
-        )}
-      </div>
     </div>
 
     <!-- Content -->
@@ -76,26 +74,33 @@ function capitalize(str: string): string {
       <!-- Header -->
       <header>
         <h1 class="text-2xl font-bold text-[--color-text]">{spot.name}</h1>
-        {spot.tagline && (
-          <p class="text-[--color-primary] font-medium mt-1">{spot.tagline}</p>
-        )}
 
-        <!-- Meta row -->
-        <div class="flex items-center gap-4 mt-3 text-sm text-[--color-text-secondary]">
-          {spot.rating && (
-            <div class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-yellow-400 text-[18px] filled">star</span>
-              <span class="font-bold text-[--color-text]">{spot.rating}</span>
-            </div>
+        <!-- Meta row: cuisine, price, distance -->
+        <div class="flex items-center gap-2 mt-2 text-sm text-primary font-medium">
+          {spot.cuisineType && (
+            <span>{capitalize(spot.cuisineType)}</span>
           )}
-          {spot.walkingDistance && (
-            <div class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-[18px]">directions_walk</span>
-              <span>{spot.walkingDistance}</span>
-            </div>
+          {spot.cuisineType && spot.priceRange && (
+            <span>•</span>
+          )}
+          {spot.priceRange && (
+            <span>{spot.priceRange}</span>
+          )}
+          {coords && (
+            <>
+              <span class="distance-separator hidden">•</span>
+              <span
+                class="distance-display hidden"
+                data-lat={coords.lat}
+                data-lng={coords.lng}
+              ></span>
+            </>
           )}
         </div>
       </header>
+
+      <!-- Divider -->
+      <div class="h-px w-full bg-white/10"></div>
 
       <!-- Description -->
       <p class="text-base leading-relaxed text-[--color-text-secondary]">
@@ -112,6 +117,38 @@ function capitalize(str: string): string {
             <div class="flex-1">
               <p class="font-bold text-[--color-text]">Address</p>
               <p class="text-sm text-[--color-text-secondary] mt-1">{spot.address}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <!-- Opening Hours Card -->
+      {formattedHours.length > 0 && (
+        <div class="card p-4">
+          <div class="flex items-start gap-3">
+            <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+              <span class="material-symbols-outlined">schedule</span>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <p class="font-bold text-[--color-text]">Opening Hours</p>
+                {openStatus !== null && (
+                  <span class={`text-xs font-bold px-2 py-0.5 rounded ${openStatus ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                    {openStatus ? 'OPEN' : 'CLOSED'}
+                  </span>
+                )}
+              </div>
+              {todayHours && (
+                <p class="text-sm text-primary font-medium mt-1">Today: {todayHours}</p>
+              )}
+              <div class="mt-3 space-y-1.5">
+                {formattedHours.map(({ day, hours, isToday }) => (
+                  <div class={`flex justify-between text-sm ${isToday ? 'text-[--color-text] font-medium' : 'text-[--color-text-secondary]'}`}>
+                    <span>{day}</span>
+                    <span class={hours.toLowerCase() === 'closed' ? 'text-red-400' : ''}>{hours}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -159,6 +196,9 @@ function capitalize(str: string): string {
 </BaseLayout>
 
 <script>
+  import { initDistanceDisplay } from '../../lib/geolocation';
+
+  // Copy address functionality
   document.querySelectorAll('.copy-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const address = btn.getAttribute('data-address');
@@ -177,6 +217,9 @@ function capitalize(str: string): string {
       }
     });
   });
+
+  // Initialize distance display
+  initDistanceDisplay();
 </script>
 
 <style>
