@@ -14,7 +14,12 @@
       },
       "image": "/images/spots/jj.jpg",
       "phone": "0821960265",
-      "openingHours": "00:00 - 24:00"
+      "openingHours": {
+        "default": "11:30-22h00",
+        "exceptions": {
+          "sunday": "closed"
+        }
+      }
     }
   ]
 }
