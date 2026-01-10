@@ -60,6 +60,18 @@ export type CuisineType =
   | 'cafe'
   | 'other';
 
+export type BarType =
+  | 'cocktail'
+  | 'beer'
+  | 'wine'
+  | 'rooftop'
+  | 'live-music'
+  | 'sports'
+  | 'club'
+  | 'lounge'
+  | 'pub'
+  | 'other';
+
 export type PriceRange = '€' | '€€' | '€€€';
 
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
@@ -74,6 +86,7 @@ export interface Spot {
   name: string;
   description: string;
   cuisineType?: CuisineType;
+  barType?: BarType;
   priceRange?: PriceRange;
   image?: string;
   address?: string;

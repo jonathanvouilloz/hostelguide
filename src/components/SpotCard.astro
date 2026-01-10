@@ -20,7 +20,7 @@ const openStatus = isOpen(spot.openingHours);
 const coords = spot.coordinates || spot.location;
 ---
 
-<a href={`/${category}/${spot.id}`} class="spot-card group" data-cuisine={spot.cuisineType || ''}>
+<a href={`/${category}/${spot.id}`} class="spot-card group" data-cuisine={spot.cuisineType || ''} data-bar-type={spot.barType || ''}>
   <article class="relative flex flex-col overflow-hidden rounded-xl bg-white/5 transition-transform active:scale-[0.99]">
     <!-- Closed overlay (full card) -->
     {openStatus === false && (
