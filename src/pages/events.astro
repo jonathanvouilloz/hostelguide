@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EventCard from '../components/EventCard.astro';
+import { getUpcomingEvents } from '../lib/content';
+
+const events = await getUpcomingEvents(7);
+---
+
+<BaseLayout title="This Week" description="Upcoming events at the hostel">
+  <div class="p-4 max-w-md mx-auto pb-safe">
+    <header class="mb-4">
+      <h1 class="text-xl font-bold flex items-center gap-2">
+        <span aria-hidden="true">📅</span>
+        This Week
+      </h1>
+      <p class="text-muted text-sm mt-1">Upcoming events and activities</p>
+    </header>
+
+    {events.length > 0 ? (
+      <div class="events-list space-y-4">
+        {events.map(event => (
+          <EventCard event={event} />
+        ))}
+      </div>
+    ) : (
+      <div class="empty-state card p-6 text-center">
+        <p class="text-2xl mb-2" aria-hidden="true">📭</p>
+        <p class="font-medium">No events planned</p>
+        <p class="text-muted text-sm mt-1">Check back soon for upcoming activities!</p>
+      </div>
+    )}
+
+    <div class="mt-6 text-center">
+      <a href="/" class="btn-secondary inline-block">
+        ← Back to Home
+      </a>
+    </div>
+  </div>
+</BaseLayout>

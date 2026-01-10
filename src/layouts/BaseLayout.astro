@@ -1,0 +1,66 @@
+---
+import '../styles/global.css';
+import { getSettings } from '../lib/content';
+import Header from '../components/Header.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const settings = await getSettings();
+
+const pageTitle = title
+  ? `${title} | ${settings.hostelName}`
+  : settings.hostelName;
+
+const pageDescription = description || `Welcome to ${settings.hostelName} - Your digital guide`;
+
+const cssVariables = `
+  :root {
+    --color-primary: ${settings.primaryColor};
+    --color-accent: ${settings.accentColor};
+  }
+`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={pageDescription} />
+
+    <meta name="theme-color" content={settings.primaryColor} />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content={settings.hostelName} />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/images/icon-192.png" />
+
+    <link rel="manifest" href="/manifest.json" />
+
+    <title>{pageTitle}</title>
+
+    <style set:html={cssVariables}></style>
+  </head>
+
+  <body class="min-h-screen bg-gray-50">
+    <a
+      href="#main"
+      class="sr-only sr-only-focusable fixed top-4 left-4 z-50 bg-primary text-white px-4 py-2 rounded-lg"
+    >
+      Skip to main content
+    </a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+  </body>
+</html>

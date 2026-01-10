@@ -1,0 +1,19 @@
+{
+  "hostelName": "Chill House Chiang Mai",
+  "logo": "/images/logo.png",
+  "primaryColor": "#2563eb",
+  "accentColor": "#f59e0b",
+  "wifi": {
+    "name": "ChillHouse_Guest",
+    "password": "welcome2024"
+  },
+  "checkIn": "14:00",
+  "checkOut": "11:00",
+  "contactWhatsApp": "+66812345678",
+  "emergencyContacts": [
+    { "name": "Hostel Reception", "phone": "+66812345678" },
+    { "name": "Tourist Police", "phone": "1155" },
+    { "name": "Hospital (Ram)", "phone": "+6653920300" }
+  ],
+  "timezone": "Asia/Bangkok"
+}

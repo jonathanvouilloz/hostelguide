@@ -1,0 +1,44 @@
+---
+import type { EmergencyContact } from '../lib/types';
+
+interface Props {
+  contacts: EmergencyContact[];
+}
+
+const { contacts } = Astro.props;
+---
+
+<div class="card p-4 mt-4">
+  <div class="flex items-center gap-3 mb-3">
+    <span class="text-2xl" aria-hidden="true">🚨</span>
+    <h2 class="font-semibold text-lg">Emergency Contacts</h2>
+  </div>
+
+  <ul class="space-y-2">
+    {contacts.map((contact) => (
+      <li>
+        <a
+          href={`tel:${contact.phone}`}
+          class="contact-link touch-target flex items-center justify-between p-3 rounded-lg transition-colors"
+        >
+          <span class="font-medium">{contact.name}</span>
+          <span class="text-primary font-mono">{contact.phone}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .contact-link {
+    background-color: #f9fafb;
+  }
+
+  .contact-link:hover {
+    background-color: #f3f4f6;
+  }
+
+  .contact-link:active {
+    background-color: #e5e7eb;
+  }
+</style>

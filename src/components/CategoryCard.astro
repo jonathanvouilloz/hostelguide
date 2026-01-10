@@ -1,0 +1,45 @@
+---
+interface Props {
+  emoji: string;
+  label: string;
+  href: string;
+  fullWidth?: boolean;
+}
+
+const { emoji, label, href, fullWidth = false } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'category-card card touch-target flex items-center gap-3 p-4 transition-all',
+    { 'full-width': fullWidth }
+  ]}
+>
+  <span class="emoji text-2xl" aria-hidden="true">{emoji}</span>
+  <span class="label font-medium">{label}</span>
+  <span class="arrow ml-auto text-muted" aria-hidden="true">›</span>
+</a>
+
+<style>
+  .category-card {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .category-card:hover {
+    background-color: #f9fafb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .category-card:active {
+    transform: translateY(0);
+    background-color: #f3f4f6;
+  }
+
+  .arrow {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+</style>

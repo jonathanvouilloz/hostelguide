@@ -1,0 +1,56 @@
+---
+import { getSettings } from '../lib/content';
+
+const settings = await getSettings();
+---
+
+<header class="header">
+  <a href="/" class="header-brand">
+    <img
+      src={settings.logo}
+      alt={`${settings.hostelName} logo`}
+      class="header-logo"
+      width="40"
+      height="40"
+    />
+    <span class="header-name">{settings.hostelName}</span>
+  </a>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: var(--header-height);
+    background-color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    padding-inline: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: white;
+  }
+
+  .header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: white;
+  }
+
+  .header-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

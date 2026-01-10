@@ -1,0 +1,76 @@
+---
+interface Props {
+  name: string;
+  password: string;
+}
+
+const { name, password } = Astro.props;
+---
+
+<div class="wifi-card card p-4">
+  <div class="flex items-center gap-3 mb-3">
+    <span class="text-2xl" aria-hidden="true">📶</span>
+    <h2 class="font-semibold text-lg">WiFi</h2>
+  </div>
+
+  <div class="space-y-2">
+    <div class="flex items-center justify-between">
+      <span class="text-muted text-sm">Network</span>
+      <span class="font-medium">{name}</span>
+    </div>
+
+    <div class="flex items-center justify-between gap-3">
+      <span class="text-muted text-sm">Password</span>
+      <div class="flex items-center gap-2">
+        <code class="wifi-password font-mono bg-gray-100 px-2 py-1 rounded text-sm">{password}</code>
+        <button
+          type="button"
+          class="copy-btn touch-target flex items-center justify-center px-3 py-2 rounded-lg bg-primary text-white text-sm font-medium transition-all"
+          data-password={password}
+          aria-label="Copy password to clipboard"
+        >
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const password = btn.getAttribute('data-password');
+      const textEl = btn.querySelector('.copy-text');
+
+      if (!password || !textEl) return;
+
+      try {
+        await navigator.clipboard.writeText(password);
+
+        textEl.textContent = 'Copied!';
+        btn.classList.add('copied');
+
+        setTimeout(() => {
+          textEl.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+</script>
+
+<style>
+  .wifi-card {
+    background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+  }
+
+  .copy-btn {
+    min-width: 70px;
+  }
+
+  .copy-btn.copied {
+    background-color: #10b981;
+  }
+</style>

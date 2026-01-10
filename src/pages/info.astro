@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmergencyContacts from '../components/EmergencyContacts.astro';
+import { getSettings } from '../lib/content';
+
+// Import markdown files as Astro components
+import { Content as HouseRules } from '../../content/house-rules.md';
+import { Content as HowToGetHere } from '../../content/how-to-get-here.md';
+
+const settings = await getSettings();
+---
+
+<BaseLayout title="Info & Rules">
+  <div class="p-4 max-w-md mx-auto pb-safe">
+    <!-- House Rules -->
+    <section class="card p-4 prose">
+      <HouseRules />
+    </section>
+
+    <!-- How to Get Here -->
+    <section class="card p-4 prose mt-4">
+      <HowToGetHere />
+    </section>
+
+    <!-- Emergency Contacts -->
+    <EmergencyContacts contacts={settings.emergencyContacts} />
+
+    <!-- Back to home -->
+    <div class="mt-6 text-center">
+      <a href="/" class="btn-secondary inline-block">
+        ← Back to Home
+      </a>
+    </div>
+  </div>
+</BaseLayout>

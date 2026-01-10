@@ -1,0 +1,20 @@
+{
+  "events": [
+    {
+      "id": "cooking-class-example",
+      "title": "Thai Cooking Class",
+      "description": "Learn to make 3 authentic Thai dishes with our chef.",
+      "date": "2026-01-15",
+      "startTime": "14:00",
+      "endTime": "17:00",
+      "location": "Hostel Kitchen",
+      "price": "500 THB",
+      "cta": {
+        "type": "whatsapp",
+        "label": "Book your spot",
+        "url": "+66812345678",
+        "message": "Hi! I'd like to join the Cooking Class on January 15th"
+      }
+    }
+  ]
+}

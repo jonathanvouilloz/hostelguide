@@ -1,0 +1,255 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllSpots, getCategoryMeta } from '../../lib/content';
+import { getDirectionsUrl } from '../../lib/deeplinks';
+import type { Spot, SpotCategory } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const allSpots = await getAllSpots();
+  const paths: { params: { id: string }; props: { spot: Spot; category: SpotCategory } }[] = [];
+
+  for (const [category, spots] of Object.entries(allSpots)) {
+    for (const spot of spots) {
+      paths.push({
+        params: { id: spot.id },
+        props: { spot, category: category as SpotCategory },
+      });
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  spot: Spot;
+  category: SpotCategory;
+}
+
+const { spot, category } = Astro.props;
+const categoryMeta = getCategoryMeta(category);
+const directionsUrl = getDirectionsUrl(spot.coordinates.lat, spot.coordinates.lng);
+
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
+}
+---
+
+<BaseLayout title={spot.name} description={spot.description}>
+  <div class="spot-detail pb-24">
+    <!-- Back button -->
+    <a href={`/${category}`} class="back-link flex items-center gap-2 p-4 text-sm font-medium">
+      <span aria-hidden="true">←</span>
+      Back to {categoryMeta?.name}
+    </a>
+
+    <!-- Image -->
+    <div class="image-container">
+      {spot.image ? (
+        <img
+          src={spot.image}
+          alt={spot.name}
+          class="spot-image"
+        />
+      ) : (
+        <div class="placeholder" aria-hidden="true">
+          <span>No image</span>
+        </div>
+      )}
+    </div>
+
+    <!-- Content -->
+    <div class="content p-4 space-y-4">
+      <!-- Header -->
+      <header>
+        <h1 class="text-2xl font-bold">{spot.name}</h1>
+        <div class="badges flex items-center gap-2 mt-2">
+          {spot.cuisineType && (
+            <span class="badge">{capitalize(spot.cuisineType)}</span>
+          )}
+          <span class="badge badge-price">{spot.priceRange}</span>
+        </div>
+      </header>
+
+      <!-- Description -->
+      <p class="description text-base leading-relaxed">
+        {spot.description}
+      </p>
+
+      <!-- Address -->
+      <div class="address-section card p-4">
+        <div class="flex items-start gap-3">
+          <span class="icon" aria-hidden="true">📍</span>
+          <div>
+            <p class="font-medium">Address</p>
+            <p class="text-muted text-sm mt-1">{spot.address}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      {spot.tags && spot.tags.length > 0 && (
+        <div class="tags flex flex-wrap gap-2">
+          {spot.tags.map(tag => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Sticky action buttons -->
+    <div class="action-bar">
+      <a
+        href={directionsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="action-btn primary touch-target"
+      >
+        <span class="icon" aria-hidden="true">🗺️</span>
+        <span>Directions</span>
+      </a>
+      <button
+        type="button"
+        class="action-btn secondary touch-target copy-btn"
+        data-address={spot.address}
+        aria-label="Copy address to clipboard"
+      >
+        <span class="icon" aria-hidden="true">📋</span>
+        <span class="copy-text">Copy Address</span>
+      </button>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const address = btn.getAttribute('data-address');
+      const textEl = btn.querySelector('.copy-text');
+
+      if (!address || !textEl) return;
+
+      try {
+        await navigator.clipboard.writeText(address);
+        textEl.textContent = 'Copied!';
+        btn.classList.add('copied');
+
+        setTimeout(() => {
+          textEl.textContent = 'Copy Address';
+          btn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+</script>
+
+<style>
+  .back-link {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+
+  .image-container {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: #f3f4f6;
+  }
+
+  .spot-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    font-size: 1rem;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background-color: #e5e7eb;
+    color: #374151;
+  }
+
+  .badge-price {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .tag {
+    font-size: 0.875rem;
+    color: var(--color-primary);
+  }
+
+  .action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    background-color: white;
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.05);
+  }
+
+  .action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .action-btn.primary {
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .action-btn.primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .action-btn.secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  .action-btn.secondary:hover {
+    background-color: #e5e7eb;
+  }
+
+  .action-btn.secondary.copied {
+    background-color: #10b981;
+    color: white;
+  }
+
+  .icon {
+    font-size: 1.125rem;
+  }
+</style>

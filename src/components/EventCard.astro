@@ -1,0 +1,142 @@
+---
+import type { HostelEvent } from '../lib/types';
+import { getWhatsAppUrl } from '../lib/deeplinks';
+
+interface Props {
+  event: HostelEvent;
+}
+
+const { event } = Astro.props;
+
+// Parse date for display
+const eventDate = new Date(event.date);
+const dayName = eventDate.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+const dayNumber = eventDate.getDate();
+
+// Build CTA URL
+function getCtaUrl(): string | null {
+  if (!event.cta) return null;
+
+  if (event.cta.type === 'whatsapp') {
+    return getWhatsAppUrl(event.cta.url, event.cta.message);
+  }
+  return event.cta.url;
+}
+
+const ctaUrl = getCtaUrl();
+---
+
+<article class="event-card card">
+  <div class="event-header">
+    <div class="date-block">
+      <span class="day-name">{dayName}</span>
+      <span class="day-number">{dayNumber}</span>
+    </div>
+    <div class="time-block">
+      <span class="time">{event.startTime}</span>
+      <span class="time-separator">—</span>
+      <span class="time">{event.endTime}</span>
+    </div>
+  </div>
+
+  <div class="event-content p-4">
+    <h3 class="event-title font-semibold text-lg">{event.title}</h3>
+    <p class="event-description text-sm text-muted mt-1">{event.description}</p>
+
+    <div class="event-meta mt-3 space-y-1">
+      <div class="meta-item flex items-center gap-2 text-sm">
+        <span aria-hidden="true">📍</span>
+        <span>{event.location}</span>
+      </div>
+      {event.price && (
+        <div class="meta-item flex items-center gap-2 text-sm">
+          <span aria-hidden="true">💰</span>
+          <span>{event.price}</span>
+        </div>
+      )}
+    </div>
+
+    {ctaUrl && event.cta && (
+      <a
+        href={ctaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-button touch-target mt-4"
+      >
+        {event.cta.label}
+        <span aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</article>
+
+<style>
+  .event-card {
+    overflow: hidden;
+  }
+
+  .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  .date-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .day-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+  }
+
+  .day-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .time-separator {
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  .cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-accent, #f59e0b);
+    color: white;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .cta-button:hover {
+    filter: brightness(1.1);
+  }
+
+  .cta-button:active {
+    transform: scale(0.98);
+  }
+</style>
