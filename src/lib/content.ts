@@ -28,26 +28,27 @@ export async function getSettings(): Promise<Settings> {
 // ============================================
 
 export async function getSpots(category: SpotCategory): Promise<Spot[]> {
-  let data: { spots: Spot[] };
+  let rawData: unknown;
 
   switch (category) {
     case 'restaurants':
-      data = (await import('../../content/spots/restaurants.json')).default as { spots: Spot[] };
+      rawData = (await import('../../content/spots/restaurants.json')).default;
       break;
     case 'laundry':
-      data = (await import('../../content/spots/laundry.json')).default as { spots: Spot[] };
+      rawData = (await import('../../content/spots/laundry.json')).default;
       break;
     case 'transport':
-      data = (await import('../../content/spots/transport.json')).default as { spots: Spot[] };
+      rawData = (await import('../../content/spots/transport.json')).default;
       break;
     case 'bars':
-      data = (await import('../../content/spots/bars.json')).default as { spots: Spot[] };
+      rawData = (await import('../../content/spots/bars.json')).default;
       break;
     case 'activities':
-      data = (await import('../../content/spots/activities.json')).default as { spots: Spot[] };
+      rawData = (await import('../../content/spots/activities.json')).default;
       break;
   }
 
+  const data = rawData as { spots: Spot[] };
   return data.spots;
 }
 

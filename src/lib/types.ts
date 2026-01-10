@@ -58,10 +58,13 @@ export interface Spot {
   name: string;
   description: string;
   cuisineType?: CuisineType;
-  priceRange: PriceRange;
-  image: string;
-  address: string;
-  coordinates: Coordinates;
+  priceRange?: PriceRange;
+  image?: string;
+  address?: string;
+  coordinates?: Coordinates;
+  location?: Coordinates; // Alias for PagesCMS compatibility
+  phone?: string;
+  openingHours?: string;
   tags?: string[];
 }
 

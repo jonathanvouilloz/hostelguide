@@ -27,7 +27,10 @@ interface Props {
 
 const { spot, category } = Astro.props;
 const categoryMeta = getCategoryMeta(category);
-const directionsUrl = getDirectionsUrl(spot.coordinates.lat, spot.coordinates.lng);
+
+// Support both coordinates and location (PagesCMS compatibility)
+const coords = spot.coordinates || spot.location;
+const directionsUrl = coords ? getDirectionsUrl(coords.lat, coords.lng) : null;
 
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).replace('-', ' ');
@@ -66,7 +69,9 @@ function capitalize(str: string): string {
           {spot.cuisineType && (
             <span class="badge">{capitalize(spot.cuisineType)}</span>
           )}
-          <span class="badge badge-price">{spot.priceRange}</span>
+          {spot.priceRange && (
+            <span class="badge badge-price">{spot.priceRange}</span>
+          )}
         </div>
       </header>
 
@@ -76,15 +81,17 @@ function capitalize(str: string): string {
       </p>
 
       <!-- Address -->
-      <div class="address-section card p-4">
-        <div class="flex items-start gap-3">
-          <span class="icon" aria-hidden="true">📍</span>
-          <div>
-            <p class="font-medium">Address</p>
-            <p class="text-muted text-sm mt-1">{spot.address}</p>
+      {spot.address && (
+        <div class="address-section card p-4">
+          <div class="flex items-start gap-3">
+            <span class="icon" aria-hidden="true">📍</span>
+            <div>
+              <p class="font-medium">Address</p>
+              <p class="text-muted text-sm mt-1">{spot.address}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <!-- Tags -->
       {spot.tags && spot.tags.length > 0 && (
@@ -98,15 +105,17 @@ function capitalize(str: string): string {
 
     <!-- Sticky action buttons -->
     <div class="action-bar">
-      <a
-        href={directionsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="action-btn primary touch-target"
-      >
-        <span class="icon" aria-hidden="true">🗺️</span>
-        <span>Directions</span>
-      </a>
+      {directionsUrl ? (
+        <a
+          href={directionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="action-btn primary touch-target"
+        >
+          <span class="icon" aria-hidden="true">🗺️</span>
+          <span>Directions</span>
+        </a>
+      ) : null}
       <button
         type="button"
         class="action-btn secondary touch-target copy-btn"
