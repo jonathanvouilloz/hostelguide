@@ -441,13 +441,27 @@ content:
             label: ID
             type: string
             required: true
+            description: "Unique slug (e.g. cooking-class)"
           - name: title
             label: Title
             type: string
             required: true
+          - name: tagline
+            label: Tagline
+            type: string
+            description: "Short catchy description shown on cards"
           - name: description
             label: Description
             type: text
+          - name: type
+            label: Event Type
+            type: select
+            required: true
+            options:
+              values:
+                - food
+                - bars
+                - activities
           - name: date
             label: Date
             type: date
@@ -455,7 +469,7 @@ content:
           - name: startTime
             label: Start Time
             type: string
-            description: "Format: HH:MM"
+            description: "Format: HH:MM (leave empty for All Day events)"
           - name: endTime
             label: End Time
             type: string
@@ -463,22 +477,49 @@ content:
           - name: location
             label: Location
             type: string
-          - name: ctaType
-            label: CTA Type
-            type: select
+            required: true
+          - name: lat
+            label: Latitude
+            type: number
+            description: "GPS latitude for Maps button"
+          - name: lng
+            label: Longitude
+            type: number
+            description: "GPS longitude for Maps button"
+          - name: image
+            label: Cover Image
+            type: image
             options:
-              values:
-                - whatsapp
-                - link
-                - none
-          - name: ctaLabel
-            label: CTA Label
+              path: public/images/events
+            description: "Hero image for event detail page"
+          - name: price
+            label: Price
             type: string
-            description: "e.g. Book Now, Join Us"
-          - name: ctaValue
-            label: CTA Value
-            type: string
-            description: "WhatsApp number or URL"
+            description: "e.g. Free, 500 THB, 1,200 THB"
+          - name: cta
+            label: Call to Action
+            type: object
+            description: "Button shown on event detail page"
+            fields:
+              - name: type
+                label: Type
+                type: select
+                options:
+                  values:
+                    - whatsapp
+                    - link
+              - name: label
+                label: Button Label
+                type: string
+                description: "e.g. Book Now, Join Us"
+              - name: url
+                label: URL / WhatsApp Number
+                type: string
+                description: "WhatsApp: +66812345678, Link: https://..."
+              - name: message
+                label: WhatsApp Message
+                type: string
+                description: "Pre-filled message for WhatsApp"
 
 media:
   input: public/images
