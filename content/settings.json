@@ -1,7 +1,7 @@
 {
   "hostelName": "Whoopers Hostel Chiang Mai",
   "logo": "/images/whoopers.jpeg",
-  "theme": "light",
+  "theme": "dark",
   "wifi": {
     "name": "WHOOPERS 2.4G",
     "password": "getalife"
