@@ -97,7 +97,7 @@ const hasImage = !!event.image;
       <header>
         <!-- Event type badge -->
         <div class="flex items-center gap-2 mb-2">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[--color-primary]/20 text-[--color-primary] text-xs font-bold uppercase tracking-wider">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-(--color-primary)/20 text-(--color-primary) text-xs font-bold uppercase tracking-wider">
             <span class="material-symbols-outlined text-[14px]">{getEventIcon(event.type)}</span>
             {capitalize(event.type)}
           </span>
@@ -108,27 +108,27 @@ const hasImage = !!event.image;
           )}
         </div>
 
-        <h1 class="text-2xl font-bold text-[--color-text]">{event.title}</h1>
-        <p class="text-base text-[--color-primary] font-medium mt-1">{event.tagline}</p>
+        <h1 class="text-2xl font-bold text-(--color-text)">{event.title}</h1>
+        <p class="text-base text-(--color-primary) font-medium mt-1">{event.tagline}</p>
       </header>
 
       <!-- Divider -->
       <div class="h-px w-full bg-white/10"></div>
 
       <!-- Description -->
-      <p class="text-base leading-relaxed text-[--color-text-secondary]">
+      <p class="text-base leading-relaxed text-(--color-text-secondary)">
         {event.description}
       </p>
 
       <!-- Date & Time Card -->
       <div class="card p-4">
         <div class="flex items-start gap-3">
-          <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+          <div class="flex size-10 items-center justify-center rounded-full bg-(--color-primary)/10 text-(--color-primary)">
             <span class="material-symbols-outlined">calendar_today</span>
           </div>
           <div class="flex-1">
-            <p class="font-bold text-[--color-text]">{formattedDate}</p>
-            <p class="text-sm text-[--color-primary] font-medium mt-1">
+            <p class="font-bold text-(--color-text)">{formattedDate}</p>
+            <p class="text-sm text-(--color-primary) font-medium mt-1">
               {getTimeDisplay()}
             </p>
           </div>
@@ -138,12 +138,12 @@ const hasImage = !!event.image;
       <!-- Location Card -->
       <div class="card p-4">
         <div class="flex items-start gap-3">
-          <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+          <div class="flex size-10 items-center justify-center rounded-full bg-(--color-primary)/10 text-(--color-primary)">
             <span class="material-symbols-outlined">location_on</span>
           </div>
           <div class="flex-1">
-            <p class="font-bold text-[--color-text]">Location</p>
-            <p class="text-sm text-[--color-text-secondary] mt-1">{event.location}</p>
+            <p class="font-bold text-(--color-text)">Location</p>
+            <p class="text-sm text-(--color-text-secondary) mt-1">{event.location}</p>
           </div>
         </div>
       </div>

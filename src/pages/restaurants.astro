@@ -32,7 +32,7 @@ function capitalize(str: string): string {
   <Header title="Eat & Drink" showBack backHref="/" />
 
   <!-- Filter Chips -->
-  <div class="sticky top-16 z-10 w-full overflow-x-auto no-scrollbar bg-[--color-bg] py-3 px-4">
+  <div class="sticky top-16 z-10 w-full overflow-x-auto no-scrollbar bg-(--color-bg) py-3 px-4">
     <div class="flex gap-2" id="filter-chips">
       <a
         href="/restaurants"
@@ -57,10 +57,10 @@ function capitalize(str: string): string {
   <main class="flex flex-col gap-4 px-4 pt-2 pb-4">
     <!-- Hero Text -->
     <div class="py-2">
-      <h2 class="text-2xl font-extrabold text-[--color-text] leading-tight">
+      <h2 class="text-2xl font-extrabold text-(--color-text) leading-tight">
         Hungry?
       </h2>
-      <p class="text-[--color-text-secondary] text-base mt-1">
+      <p class="text-(--color-text-secondary) text-base mt-1">
         Here's where the locals go.
       </p>
     </div>
@@ -74,13 +74,13 @@ function capitalize(str: string): string {
       </div>
     ) : (
       <div class="card p-6 text-center">
-        <p class="text-[--color-text-secondary]">No restaurants found.</p>
+        <p class="text-(--color-text-secondary)">No restaurants found.</p>
       </div>
     )}
 
     <!-- Footer Text -->
     <div class="py-6 text-center">
-      <p class="text-sm text-[--color-text-secondary]">
+      <p class="text-sm text-(--color-text-secondary)">
         Showing top recommendations near you.
       </p>
     </div>

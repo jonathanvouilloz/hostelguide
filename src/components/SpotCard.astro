@@ -36,8 +36,8 @@ const coords = spot.coordinates || spot.location;
           style={`background-image: url("${spot.image}");`}
         ></div>
       ) : (
-        <div class="absolute inset-0 bg-[--color-surface-input] flex items-center justify-center">
-          <span class="material-symbols-outlined text-[48px] text-[--color-text-secondary]/30">restaurant</span>
+        <div class="absolute inset-0 bg-(--color-surface-input) flex items-center justify-center">
+          <span class="material-symbols-outlined text-[48px] text-(--color-text-secondary)/30">restaurant</span>
         </div>
       )}
 
@@ -59,7 +59,7 @@ const coords = spot.coordinates || spot.location;
     <!-- Content -->
     <div class="flex flex-col gap-1.5 p-4">
       <!-- Title -->
-      <h3 class="text-base font-bold text-[--color-text] leading-tight">{spot.name}</h3>
+      <h3 class="text-base font-bold text-(--color-text) leading-tight">{spot.name}</h3>
 
       <!-- Description/Tagline -->
       {(spot.tagline || spot.description) && (
@@ -73,9 +73,9 @@ const coords = spot.coordinates || spot.location;
 
       <!-- Footer Row -->
       <div class="flex items-center justify-between text-sm">
-        <div class="flex items-center gap-2 text-[--color-text-secondary]">
+        <div class="flex items-center gap-2 text-(--color-text-secondary)">
           {spot.priceRange && (
-            <span class="font-semibold text-[--color-text]">{spot.priceRange}</span>
+            <span class="font-semibold text-(--color-text)">{spot.priceRange}</span>
           )}
           {coords && (
             <span class="distance-text flex items-center gap-1 hidden">

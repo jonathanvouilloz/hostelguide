@@ -63,8 +63,8 @@ function capitalize(str: string): string {
           style={`background-image: linear-gradient(to bottom, transparent 0%, rgba(16, 31, 34, 0.6) 70%, rgba(16, 31, 34, 1) 100%), url("${spot.image}");`}
         ></div>
       ) : (
-        <div class="absolute inset-0 bg-[--color-surface-input] flex items-center justify-center">
-          <span class="material-symbols-outlined text-[64px] text-[--color-text-secondary]/30">image</span>
+        <div class="absolute inset-0 bg-(--color-surface-input) flex items-center justify-center">
+          <span class="material-symbols-outlined text-[64px] text-(--color-text-secondary)/30">image</span>
         </div>
       )}
     </div>
@@ -73,7 +73,7 @@ function capitalize(str: string): string {
     <div class="px-4 pt-4 space-y-5">
       <!-- Header -->
       <header>
-        <h1 class="text-2xl font-bold text-[--color-text]">{spot.name}</h1>
+        <h1 class="text-2xl font-bold text-(--color-text)">{spot.name}</h1>
 
         <!-- Meta row: cuisine, price, distance -->
         <div class="flex items-center gap-2 mt-2 text-sm text-primary font-medium">
@@ -103,7 +103,7 @@ function capitalize(str: string): string {
       <div class="h-px w-full bg-white/10"></div>
 
       <!-- Description -->
-      <p class="text-base leading-relaxed text-[--color-text-secondary]">
+      <p class="text-base leading-relaxed text-(--color-text-secondary)">
         {spot.description}
       </p>
 
@@ -111,12 +111,12 @@ function capitalize(str: string): string {
       {spot.address && (
         <div class="card p-4">
           <div class="flex items-start gap-3">
-            <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+            <div class="flex size-10 items-center justify-center rounded-full bg-(--color-primary)/10 text-(--color-primary)">
               <span class="material-symbols-outlined">location_on</span>
             </div>
             <div class="flex-1">
-              <p class="font-bold text-[--color-text]">Address</p>
-              <p class="text-sm text-[--color-text-secondary] mt-1">{spot.address}</p>
+              <p class="font-bold text-(--color-text)">Address</p>
+              <p class="text-sm text-(--color-text-secondary) mt-1">{spot.address}</p>
             </div>
           </div>
         </div>
@@ -126,12 +126,12 @@ function capitalize(str: string): string {
       {formattedHours.length > 0 && (
         <div class="card p-4">
           <div class="flex items-start gap-3">
-            <div class="flex size-10 items-center justify-center rounded-full bg-[--color-primary]/10 text-[--color-primary]">
+            <div class="flex size-10 items-center justify-center rounded-full bg-(--color-primary)/10 text-(--color-primary)">
               <span class="material-symbols-outlined">schedule</span>
             </div>
             <div class="flex-1">
               <div class="flex items-center justify-between">
-                <p class="font-bold text-[--color-text]">Opening Hours</p>
+                <p class="font-bold text-(--color-text)">Opening Hours</p>
                 {openStatus !== null && (
                   <span class={`text-xs font-bold px-2 py-0.5 rounded ${openStatus ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                     {openStatus ? 'OPEN' : 'CLOSED'}
@@ -143,7 +143,7 @@ function capitalize(str: string): string {
               )}
               <div class="mt-3 space-y-1.5">
                 {formattedHours.map(({ day, hours, isToday }) => (
-                  <div class={`flex justify-between text-sm ${isToday ? 'text-[--color-text] font-medium' : 'text-[--color-text-secondary]'}`}>
+                  <div class={`flex justify-between text-sm ${isToday ? 'text-(--color-text) font-medium' : 'text-(--color-text-secondary)'}`}>
                     <span>{day}</span>
                     <span class={hours.toLowerCase() === 'closed' ? 'text-red-400' : ''}>{hours}</span>
                   </div>
@@ -158,7 +158,7 @@ function capitalize(str: string): string {
       {spot.tags && spot.tags.length > 0 && (
         <div class="flex flex-wrap gap-2">
           {spot.tags.map(tag => (
-            <span class="text-sm text-[--color-primary]">#{tag}</span>
+            <span class="text-sm text-(--color-primary)">#{tag}</span>
           ))}
         </div>
       )}

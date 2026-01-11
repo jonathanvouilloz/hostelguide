@@ -28,23 +28,23 @@ function getContactIcon(name: string): string {
       class:list={[
         'emergency-btn flex flex-col items-center justify-center gap-1 p-3 rounded-lg transition-all active:scale-95',
         index === 0 || index === 1
-          ? 'bg-red-500/10 border border-red-500/20'
-          : 'bg-[--color-surface-input] border border-[--color-border]'
+          ? 'bg-red-500/10'
+          : 'bg-white/5'
       ]}
     >
       <span class:list={[
         'material-symbols-outlined text-[24px]',
-        index === 0 || index === 1 ? 'text-red-400' : 'text-[--color-text-secondary]'
+        index === 0 || index === 1 ? 'text-red-400' : 'text-(--color-text-secondary)'
       ]}>
         {getContactIcon(contact.name)}
       </span>
       <span class:list={[
         'text-sm font-bold text-center leading-tight',
-        index === 0 || index === 1 ? 'text-red-300' : 'text-[--color-text]'
+        index === 0 || index === 1 ? 'text-red-300' : 'text-(--color-text)'
       ]}>
         {contact.name}
       </span>
-      <span class="text-xs text-[--color-text-secondary] font-mono">{contact.phone}</span>
+      <span class="text-xs text-(--color-text-secondary) font-mono">{contact.phone}</span>
     </a>
   ))}
 </div>

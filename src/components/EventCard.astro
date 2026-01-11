@@ -12,37 +12,34 @@ interface Props {
 const { event } = Astro.props;
 ---
 
-<article class="event-card card overflow-hidden">
+<a href={`/event/${event.id}`} class="event-card card overflow-hidden block">
   <div class="p-3">
     <!-- Title and tagline -->
     <div class="mb-3">
-      <h3 class="text-base font-bold text-[--color-text] leading-tight">{event.title}</h3>
-      <p class="text-sm text-[--color-text-secondary] mt-1">{event.tagline}</p>
+      <h3 class="text-base font-bold text-(--color-text) leading-tight">{event.title}</h3>
+      <p class="text-sm text-(--color-text-secondary) mt-1">{event.tagline}</p>
     </div>
 
     <!-- Price -->
     {event.price && (
       <div class="text-sm mb-3">
-        <span class="text-[--color-primary] font-bold">{event.price}</span>
+        <span class="text-(--color-primary) font-bold">{event.price}</span>
       </div>
     )}
 
     <!-- Bottom row: Location left, Details right -->
     <div class="flex items-center justify-between pt-2 border-t border-white/5">
-      <div class="flex items-center gap-1 text-xs text-[--color-text-secondary]">
+      <div class="flex items-center gap-1 text-xs text-(--color-text-secondary)">
         <span class="material-symbols-outlined" style="font-size: 12px;">location_on</span>
         <span>{event.location}</span>
       </div>
-      <a
-        href={`/event/${event.id}`}
-        class="event-details-link"
-      >
+      <span class="event-details-link">
         <span>Details</span>
         <span class="material-symbols-outlined" style="font-size: 12px;">arrow_forward</span>
-      </a>
+      </span>
     </div>
   </div>
-</article>
+</a>
 
 <style>
   .event-card {

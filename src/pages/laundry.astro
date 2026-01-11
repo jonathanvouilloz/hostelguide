@@ -13,10 +13,10 @@ const spots = await getSpots('laundry');
   <main class="flex flex-col gap-5 px-4 pt-4 pb-4">
     <!-- Hero Text -->
     <div class="py-2">
-      <h2 class="text-2xl font-extrabold text-[--color-text] leading-tight">
+      <h2 class="text-2xl font-extrabold text-(--color-text) leading-tight">
         Laundry
         <br />
-        <span class="text-[--color-text-secondary] font-medium text-lg">
+        <span class="text-(--color-text-secondary) font-medium text-lg">
           Wash & dry services nearby.
         </span>
       </h2>
@@ -31,7 +31,7 @@ const spots = await getSpots('laundry');
       </div>
     ) : (
       <div class="card p-6 text-center">
-        <p class="text-[--color-text-secondary]">No laundry services listed yet.</p>
+        <p class="text-(--color-text-secondary)">No laundry services listed yet.</p>
       </div>
     )}
   </main>

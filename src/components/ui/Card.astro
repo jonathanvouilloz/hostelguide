@@ -18,9 +18,9 @@ const {
 
 const Tag = href ? 'a' : 'div';
 
-const baseClasses = 'block rounded-2xl bg-[--color-surface] border border-[--color-border] overflow-hidden';
+const baseClasses = 'block rounded-2xl bg-(--color-surface) border border-(--color-border) overflow-hidden';
 const elevatedClass = elevated ? 'shadow-[0_8px_30px_rgba(0,0,0,0.4)]' : '';
-const linkClasses = href ? 'transition-transform active:scale-[0.99] hover:border-[--color-border-light]' : '';
+const linkClasses = href ? 'transition-transform active:scale-[0.99] hover:border-(--color-border-light)' : '';
 
 const paddingClasses = {
   none: '',
