@@ -169,30 +169,47 @@ const heroImage = '/images/hero-hostel.jpg';
 </script>
 
 <style>
-  .prose-dark h1,
-  .prose-dark h2,
-  .prose-dark h3 {
-    color: var(--color-text);
-    font-weight: 700;
+  /* Hide the redundant h1 since accordion already shows title */
+  .prose-dark h1 {
+    display: none;
   }
 
   .prose-dark h2 {
+    color: var(--color-text);
+    font-weight: 700;
     font-size: 1rem;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--color-separator);
+  }
+
+  .prose-dark h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose-dark h3 {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    margin-bottom: 0.375rem;
   }
 
   .prose-dark p {
     margin-bottom: 0.5rem;
+    line-height: 1.5;
   }
 
   .prose-dark ul {
     list-style: disc;
     padding-left: 1.25rem;
+    margin-bottom: 0.75rem;
   }
 
   .prose-dark li {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.375rem;
+    line-height: 1.4;
   }
 
   .prose-dark strong {
