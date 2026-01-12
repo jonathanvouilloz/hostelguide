@@ -1,27 +1,41 @@
-# How to Get Here
+---
+content: |-
+  # How to Get Here
 
-## From Chiang Mai Airport (CNX)
+  ## From Chiang Mai Airport (CNX)
 
-### By Taxi
-- Official taxi counter in arrivals
-- Fixed price: **150 THB** to Old City
-- Journey time: ~20 minutes
+  ### By Taxi
 
-### By Grab
-- Download Grab app
-- Typically **100-120 THB**
-- Wait at designated pickup area
+  *   Official taxi counter in arrivals
+      
+  *   Fixed price: **150 THB** to Old City
+      
+  *   Journey time: ~20 minutes
+      
 
-## From Bus Station
+  ### By Grab
 
-### Arcade Bus Station
-- Take a red songthaew (shared taxi)
-- Tell the driver: "Old City, Ratchadamnoen Road"
-- Price: **30-50 THB** per person
+  *   Download Grab app
+      
+  *   Typically **100-120 THB**
+      
+  *   Wait at designated pickup area
+      
 
-## Our Address
+  ## From Bus Station
 
-**123 Ratchadamnoen Road, Soi 5**
-**Chiang Mai Old City, 50200**
+  ### Arcade Bus Station
 
-Look for the blue gate next to 7-Eleven!
+  *   Take a red songthaew (shared taxi)
+      
+  *   Tell the driver: “Old City, Ratchadamnoen Road”
+      
+  *   Price: **30-50 THB** per person
+      
+
+  ## Our Address
+
+  **123 Ratchadamnoen Road, Soi 5** **Chiang Mai Old City, 50200**
+
+  Look for the blue gate next to 7-Eleven!
+---
