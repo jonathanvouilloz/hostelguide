@@ -1,7 +1,6 @@
 {
   "spots": [
     {
-      "id": "pad-thai-heaven",
       "name": "JJ Pad Thai",
       "tagline": "Best pad thai near the hostel 🍜",
       "description": "Best pad thai near the hostel. They have also other dishes.",
@@ -18,6 +17,19 @@
         "default": "11:30-22h00",
         "exceptions": {
           "sunday": "closed"
+        }
+      }
+    },
+    {
+      "name": "Aroy Dee",
+      "tagline": "Best Khao Soi",
+      "description": "description",
+      "cuisineType": "thai",
+      "priceRange": "€",
+      "openingHours": {
+        "default": "12:00-22:00",
+        "exceptions": {
+          "monday": "closed"
         }
       }
     }
