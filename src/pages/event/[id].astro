@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
-import { getAllScheduledEventIds, getScheduledEventById } from '../../lib/content';
+import { getAllScheduledEventIds, getScheduledEventById, getSettings } from '../../lib/content';
 import { getDirectionsUrl, getWhatsAppUrl } from '../../lib/deeplinks';
 import type { ScheduledEvent, ActivityType } from '../../lib/types';
+
+const settings = await getSettings();
 
 export async function getStaticPaths() {
   const eventIds = await getAllScheduledEventIds();
@@ -33,11 +35,13 @@ const { event, isRecurring } = Astro.props;
 const hasCoordinates = event.lat !== null && event.lng !== null && event.lat !== undefined && event.lng !== undefined;
 const directionsUrl = hasCoordinates ? getDirectionsUrl(event.lat!, event.lng!) : null;
 
-// Build CTA URL
+// Build CTA URL (uses settings.contactWhatsApp as fallback for WhatsApp)
 function getCtaUrl(): string | null {
   if (!event.cta) return null;
   if (event.cta.type === 'whatsapp') {
-    return getWhatsAppUrl(event.cta.url, event.cta.message);
+    const phone = event.cta.url || settings.contactWhatsApp;
+    if (!phone) return null;
+    return getWhatsAppUrl(phone, event.cta.message);
   }
   return event.cta.url;
 }

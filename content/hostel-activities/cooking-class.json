@@ -1,0 +1,18 @@
+{
+  "id": "cooking-class",
+  "title": "Thai Cooking Class",
+  "tagline": "Learn 3 authentic dishes with our chef",
+  "description": "Join our experienced Thai chef for a hands-on cooking experience. You'll learn to prepare Pad Thai, Green Curry, and Mango Sticky Rice. All ingredients and equipment provided. Vegetarian options available.",
+  "type": "food",
+  "location": "Hostel Kitchen",
+  "lat": null,
+  "lng": null,
+  "image": null,
+  "price": "500 THB",
+  "cta": {
+    "type": "whatsapp",
+    "label": "Book your spot",
+    "url": "",
+    "message": "Hi! I'd like to join the Cooking Class"
+  }
+}

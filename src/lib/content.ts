@@ -4,7 +4,6 @@ import type {
   SpotCategory,
   CategoryMeta,
   Activity,
-  ActivitiesFile,
   ScheduleFile,
   ScheduleDay,
   ScheduleSlot,
@@ -59,8 +58,8 @@ export async function getSpots(category: SpotCategory): Promise<Spot[]> {
     case 'restaurants':
       rawData = (await import('../../content/spots/restaurants.json')).default;
       break;
-    case 'laundry':
-      rawData = (await import('../../content/spots/laundry.json')).default;
+    case 'services':
+      rawData = (await import('../../content/spots/services.json')).default;
       break;
     case 'transport':
       rawData = (await import('../../content/spots/transport.json')).default;
@@ -85,7 +84,7 @@ export async function getSpotById(category: SpotCategory, id: string): Promise<S
 }
 
 export async function getAllSpots(): Promise<Record<SpotCategory, Spot[]>> {
-  const categories: SpotCategory[] = ['restaurants', 'laundry', 'transport', 'bars'];
+  const categories: SpotCategory[] = ['restaurants', 'services', 'transport', 'bars'];
 
   const results = await Promise.all(
     categories.map(async (category) => ({
@@ -123,13 +122,24 @@ export async function findSpotById(
 // ============================================
 
 export async function getActivities(): Promise<Activity[]> {
-  const data = await import('../../content/activities.json');
-  const file = data.default as ActivitiesFile;
+  // Read individual activity files from hostel-activities folder
+  const activityFiles = import.meta.glob<{ default: Activity }>(
+    '../../content/hostel-activities/*.json',
+    { eager: true }
+  );
 
-  return file.activities.map((activity) => ({
-    ...activity,
-    id: activity.id || slugify(activity.title),
-  }));
+  const activities: Activity[] = [];
+
+  for (const path in activityFiles) {
+    const data = activityFiles[path];
+    const activity = data.default;
+    activities.push({
+      ...activity,
+      id: activity.id || slugify(activity.title),
+    });
+  }
+
+  return activities;
 }
 
 export async function getActivityById(id: string): Promise<Activity | undefined> {
@@ -425,10 +435,10 @@ export const CATEGORIES: CategoryMeta[] = [
     description: 'Local restaurants and cafes',
   },
   {
-    slug: 'laundry',
-    name: 'Laundry',
+    slug: 'services',
+    name: 'Services',
     emoji: '🧺',
-    description: 'Laundry services nearby',
+    description: 'Useful services nearby',
   },
   {
     slug: 'transport',

@@ -177,7 +177,7 @@ export interface SpotsFile {
   spots: Spot[];
 }
 
-export type SpotCategory = 'restaurants' | 'laundry' | 'transport' | 'bars';
+export type SpotCategory = 'restaurants' | 'services' | 'transport' | 'bars';
 
 // ============================================
 // Event/Activity Types
