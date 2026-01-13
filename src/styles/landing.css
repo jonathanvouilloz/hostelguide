@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,soft,wght@1,9..144,100,400;1,9..144,100,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -43,7 +43,7 @@ html {
 .title-duo span {
     font-family: var(--font-editorial);
     font-style: italic;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1.15em;
     letter-spacing: -0.02em;
     font-variation-settings: "soft" 100;
@@ -338,3 +338,11 @@ html {
 .text-balance { text-wrap: balance; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Scroll snap container */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.features-scroll-container {
+    scroll-behavior: smooth;
+}
