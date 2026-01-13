@@ -509,12 +509,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -530,12 +529,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -549,12 +547,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -568,12 +565,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -587,12 +583,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -606,12 +601,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
@@ -625,12 +619,11 @@ content:
             fields:
               - name: activityId
                 label: Activity
-                type: relation
-                required: true
+                type: reference
                 options:
                   collection: hostel-activities
-                  value: id
-                  display: title
+                  value: "{id}"
+                  label: "{title}"
               - name: startTime
                 label: Start Time
                 type: string
