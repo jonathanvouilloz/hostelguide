@@ -1,7 +1,7 @@
 ---
 /**
  * InstallCard - Inline card to prompt PWA installation
- * Hidden if app is already installed or user dismissed it
+ * Hidden only if app is already installed (standalone mode)
  */
 ---
 
@@ -16,9 +16,6 @@
     </div>
     <button id="install-card-btn" class="shrink-0 btn-primary py-2 px-3 text-xs">
       Install
-    </button>
-    <button id="install-card-dismiss" class="shrink-0 p-1.5 text-(--color-text-secondary) hover:text-(--color-text) transition-colors">
-      <span class="material-symbols-outlined text-[18px]">close</span>
     </button>
   </div>
 </div>
@@ -40,15 +37,11 @@
 <script>
   import { initPwaInstall, triggerInstall } from '../lib/pwaInstall';
 
-  // Separate localStorage key for inline card (independent from modal popup)
-  const CARD_DISMISSED_KEY = 'hostelguide_install_card_dismissed';
-
   // Initialize PWA install capture
   initPwaInstall();
 
   const card = document.getElementById('install-card');
   const installBtn = document.getElementById('install-card-btn');
-  const dismissBtn = document.getElementById('install-card-dismiss');
 
   // Check if should show card
   function checkAndShowCard() {
@@ -58,11 +51,8 @@
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
       || (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
 
-    // Check if user dismissed this card specifically
-    const isDismissed = localStorage.getItem(CARD_DISMISSED_KEY);
-
-    // Show only if not installed and not dismissed
-    if (!isStandalone && !isDismissed) {
+    // Show only if not installed
+    if (!isStandalone) {
       card.classList.add('show');
     }
   }
@@ -73,18 +63,5 @@
   // Install button
   installBtn?.addEventListener('click', async () => {
     await triggerInstall();
-    // Hide card after install attempt
-    localStorage.setItem(CARD_DISMISSED_KEY, 'true');
-    if (card) {
-      card.classList.remove('show');
-    }
-  });
-
-  // Dismiss button
-  dismissBtn?.addEventListener('click', () => {
-    localStorage.setItem(CARD_DISMISSED_KEY, 'true');
-    if (card) {
-      card.classList.remove('show');
-    }
   });
 </script>
