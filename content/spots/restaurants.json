@@ -31,7 +31,7 @@
         "lat": 18.7912926,
         "lng": 98.9932988
       },
-      "image": "public/images/spots/aroydee.jpg",
+      "image": "/images/spots/aroydee.jpg",
       "phone": "0931715426",
       "openingHours": {
         "default": "11:00-22:00",
@@ -41,6 +41,7 @@
       }
     },
     {
+      "id": "ai-kaew-restaurant",
       "name": "อาหารตามสั่งอ้ายแก้ว",
       "tagline": "Near the hostel, cheap and yummy",
       "description": "Very good small restaurant 5min walk near the hostel.",
@@ -51,7 +52,7 @@
         "lat": 18.8121088,
         "lng": 98.9691904
       },
-      "image": "public/images/spots/nearhostel.jpg",
+      "image": "/images/spots/nearhostel.jpg",
       "openingHours": {
         "default": "9:30-20:00"
       }
