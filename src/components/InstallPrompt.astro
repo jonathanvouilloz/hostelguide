@@ -104,7 +104,7 @@
     triggerInstall,
     dismissInstallPrompt
   } from '../lib/pwaInstall';
-  import { isOnboardingCompleted } from '../lib/onboarding';
+  import { hasSeenOnboarding } from '../lib/guestData';
 
   // Initialize PWA install capture early
   initPwaInstall();
@@ -115,7 +115,7 @@
   // Show install prompt after a delay if conditions are met
   function checkAndShowPrompt() {
     // Only show if onboarding is completed and install prompt is ready
-    if (!isOnboardingCompleted()) return;
+    if (!hasSeenOnboarding()) return;
     if (!shouldShowInstallPrompt()) return;
 
     const overlay = document.getElementById('install-prompt-overlay');

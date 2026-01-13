@@ -137,10 +137,7 @@ const heroImage = '/images/hero-hostel.jpg';
 </BaseLayout>
 
 <script>
-  import { resetOnboarding, runTourForPage } from '../lib/onboarding';
-
-  // Run onboarding tour for info page (final step)
-  runTourForPage('info');
+  import { resetGuestData } from '../lib/guestData';
 
   // WiFi copy functionality
   document.querySelectorAll('.quick-card[data-password]').forEach((btn) => {
@@ -162,9 +159,10 @@ const heroImage = '/images/hero-hostel.jpg';
     });
   });
 
-  // Replay tour functionality
+  // Replay onboarding functionality
   document.getElementById('replay-tour-btn')?.addEventListener('click', () => {
-    resetOnboarding();
+    resetGuestData();
+    window.location.href = '/';
   });
 </script>
 

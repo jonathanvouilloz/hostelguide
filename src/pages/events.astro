@@ -147,11 +147,6 @@ function formatTimeDisplay(startTime: string | null): string {
 </style>
 
 <script>
-  import { runTourForPage } from '../lib/onboarding';
-
-  // Run onboarding tour for events page
-  runTourForPage('events');
-
   document.addEventListener('DOMContentLoaded', () => {
     const chips = document.querySelectorAll('#day-chips .day-chip');
     const eventItems = document.querySelectorAll('.event-item');

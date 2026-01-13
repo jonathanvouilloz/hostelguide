@@ -123,16 +123,6 @@ const categoryImages = {
   </div>
 </BaseLayout>
 
-<script>
-  import { runTourForPage } from '../lib/onboarding';
-
-  // Get hostel name from header element
-  const header = document.querySelector('[data-tour="welcome"]');
-  const hostelName = header?.querySelector('.font-bold')?.textContent || 'the hostel';
-
-  // Run onboarding tour for home page
-  runTourForPage('home', { hostelName });
-</script>
 
 <style>
   /* Animate pulse for badge dot */

@@ -94,6 +94,10 @@ export interface Settings {
   timezone: string;
   heroImage?: string;
   categoryImages?: CategoryImages;
+  // Onboarding & guest data
+  whatsappGroupLink?: string;
+  webhookUrl?: string;
+  googleReviewUrl?: string;
 }
 
 // ============================================

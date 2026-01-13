@@ -29,5 +29,8 @@
     "activities": "/images/category-activities.jpg",
     "services": "/images/category-services.jpg",
     "bars": "/images/category-bars.jpg"
-  }
+  },
+  "whatsappGroupLink": "",
+  "webhookUrl": "",
+  "googleReviewUrl": ""
 }

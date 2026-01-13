@@ -114,14 +114,6 @@ function capitalize(str: string): string {
 
 <script>
   import { initDistanceDisplay } from '../lib/geolocation';
-  import { runTourForPage } from '../lib/onboarding';
-
-  // Get first spot URL for onboarding navigation
-  const firstSpotEl = document.querySelector('[data-tour="first-spot"]');
-  const firstSpotUrl = firstSpotEl?.getAttribute('data-spot-url') || '/restaurants/pad-thai-heaven';
-
-  // Run onboarding tour for restaurants page
-  runTourForPage('restaurants', { firstSpotUrl });
 
   // Initialize filter chips based on URL
   function initFilters() {
