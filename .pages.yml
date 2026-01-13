@@ -418,6 +418,7 @@ content:
     label: "🔄 Activities Library"
     path: content/hostel-activities
     type: collection
+    format: json
     description: "Reusable activities for weekly schedule. Create once, use every week!"
     view:
       fields: [title, tagline, type]
