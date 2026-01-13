@@ -88,12 +88,12 @@ function capitalize(str: string): string {
           )}
           {coords && (
             <>
-              <span class="distance-separator hidden">•</span>
+              <span class="distance-separator">•</span>
               <span
-                class="distance-display hidden"
+                class="distance-display location-trigger cursor-pointer text-primary hover:underline"
                 data-lat={coords.lat}
                 data-lng={coords.lng}
-              ></span>
+              >Activer localisation</span>
             </>
           )}
         </div>

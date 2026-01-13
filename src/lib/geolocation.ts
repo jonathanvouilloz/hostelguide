@@ -8,6 +8,9 @@ export interface Coordinates {
   lng: number;
 }
 
+const PLACEHOLDER_TEXT = 'Activer localisation';
+const LOADING_TEXT = 'Localisation...';
+
 /**
  * Calculate distance between two points using Haversine formula
  * @returns Distance in meters
@@ -75,82 +78,158 @@ export function getUserLocation(): Promise<Coordinates | null> {
 }
 
 /**
- * Initialize distance display for all elements with data-lat and data-lng attributes
- *
- * Usage in HTML:
- * - Add class "distance-display" to the element that will show the distance
- * - Add data-lat and data-lng attributes with coordinates
- * - Optionally add class "distance-separator" to a sibling element (will be shown when distance is available)
- *
- * @example
- * <span class="distance-separator hidden">•</span>
- * <span class="distance-display hidden" data-lat="18.8023" data-lng="98.9678"></span>
+ * Update all distance elements with a text value
  */
-export async function initDistanceDisplay(): Promise<void> {
-  const userLocation = await getUserLocation();
-  if (!userLocation) return;
-
-  // Find all elements with distance-display class
+function setAllDistanceText(text: string, isClickable: boolean): void {
+  // Update .distance-display elements
   const distanceElements = document.querySelectorAll('.distance-display[data-lat][data-lng]');
+  distanceElements.forEach((el) => {
+    el.textContent = text;
+    if (isClickable) {
+      el.classList.add('location-trigger');
+    } else {
+      el.classList.remove('location-trigger');
+    }
+  });
 
+  // Update .distance-value-text elements (in cards)
+  const valueTextElements = document.querySelectorAll('.distance-value-text');
+  valueTextElements.forEach((el) => {
+    el.textContent = text;
+  });
+
+  // Update .distance-value elements (in badges)
+  const valueElements = document.querySelectorAll('.distance-value');
+  valueElements.forEach((el) => {
+    el.textContent = text;
+  });
+}
+
+/**
+ * Update all distance elements with actual distances from user location
+ */
+function updateAllDistances(userLocation: Coordinates): void {
+  // Update .distance-display elements
+  const distanceElements = document.querySelectorAll('.distance-display[data-lat][data-lng]');
   distanceElements.forEach((el) => {
     const spotLat = parseFloat(el.getAttribute('data-lat') || '0');
     const spotLng = parseFloat(el.getAttribute('data-lng') || '0');
 
     if (spotLat && spotLng) {
-      const distance = calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        spotLat,
-        spotLng
-      );
-      const formatted = formatDistance(distance);
-
-      // Update the distance element
-      el.textContent = formatted;
-      el.classList.remove('hidden');
-
-      // Show separator if exists (previous sibling with distance-separator class)
-      const separator = el.previousElementSibling;
-      if (separator?.classList.contains('distance-separator')) {
-        separator.classList.remove('hidden');
-      }
+      const distance = calculateDistance(userLocation.lat, userLocation.lng, spotLat, spotLng);
+      el.textContent = formatDistance(distance);
+      el.classList.remove('location-trigger', 'cursor-pointer', 'hover:underline');
     }
   });
 
-  // Also update distance badges on cards (for list pages)
+  // Update badge and footer elements on cards
   const badgeElements = document.querySelectorAll('.distance-badge[data-lat][data-lng]');
-
   badgeElements.forEach((badge) => {
     const spotLat = parseFloat(badge.getAttribute('data-lat') || '0');
     const spotLng = parseFloat(badge.getAttribute('data-lng') || '0');
 
     if (spotLat && spotLng) {
-      const distance = calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        spotLat,
-        spotLng
-      );
+      const distance = calculateDistance(userLocation.lat, userLocation.lng, spotLat, spotLng);
       const formatted = formatDistance(distance);
 
-      // Update badge value
+      // Update badge value and show it
       const valueEl = badge.querySelector('.distance-value');
       if (valueEl) {
         valueEl.textContent = formatted;
       }
       badge.classList.remove('hidden');
 
-      // Update footer distance text if exists
+      // Update footer distance text and icon
       const card = badge.closest('.spot-card');
       if (card) {
-        const textEl = card.querySelector('.distance-text');
+        const distanceText = card.querySelector('.distance-text');
         const textValueEl = card.querySelector('.distance-value-text');
-        if (textEl && textValueEl) {
+        const iconEl = distanceText?.querySelector('.material-symbols-outlined');
+
+        if (textValueEl) {
           textValueEl.textContent = `${formatted} walk`;
-          textEl.classList.remove('hidden');
+        }
+        if (iconEl) {
+          iconEl.textContent = 'directions_walk';
+        }
+        if (distanceText) {
+          distanceText.classList.remove('location-trigger', 'cursor-pointer', 'hover:underline', 'text-primary');
+          // Reset to inherit color from parent (text-secondary)
         }
       }
     }
   });
+}
+
+/**
+ * Request location permission and update distances
+ * Called when user clicks on "Activer localisation"
+ */
+export async function requestLocationPermission(): Promise<void> {
+  // Show loading state
+  setAllDistanceText(LOADING_TEXT, false);
+
+  const userLocation = await getUserLocation();
+
+  if (userLocation) {
+    // Success - update all distances
+    updateAllDistances(userLocation);
+  } else {
+    // Denied/failed - restore placeholder
+    setAllDistanceText(PLACEHOLDER_TEXT, true);
+  }
+}
+
+/**
+ * Add click handlers to all location trigger elements
+ */
+function addClickHandlers(): void {
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const trigger = target.closest('.location-trigger');
+    if (trigger) {
+      e.preventDefault();
+      requestLocationPermission();
+    }
+  });
+}
+
+/**
+ * Check if geolocation permission is already granted
+ */
+async function checkPermissionState(): Promise<'granted' | 'prompt' | 'denied' | 'unknown'> {
+  try {
+    if (navigator.permissions) {
+      const result = await navigator.permissions.query({ name: 'geolocation' });
+      return result.state;
+    }
+  } catch {
+    // Safari doesn't support permissions.query for geolocation
+  }
+  return 'unknown';
+}
+
+/**
+ * Initialize distance display for all elements with data-lat and data-lng attributes
+ * Shows "Activer localisation" placeholder if permission not granted
+ * Auto-fetches distances if permission already granted
+ */
+export async function initDistanceDisplay(): Promise<void> {
+  const permissionState = await checkPermissionState();
+
+  if (permissionState === 'granted') {
+    // Permission already granted - fetch and display distances
+    const userLocation = await getUserLocation();
+    if (userLocation) {
+      updateAllDistances(userLocation);
+    } else {
+      setAllDistanceText(PLACEHOLDER_TEXT, true);
+    }
+  } else {
+    // Show clickable placeholder
+    setAllDistanceText(PLACEHOLDER_TEXT, true);
+  }
+
+  // Add click handlers (only once)
+  addClickHandlers();
 }

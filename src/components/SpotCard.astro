@@ -78,9 +78,9 @@ const coords = spot.coordinates || spot.location;
             <span class="font-semibold text-(--color-text)">{spot.priceRange}</span>
           )}
           {coords && (
-            <span class="distance-text flex items-center gap-1 hidden">
-              <span class="material-symbols-outlined" style="font-size: 14px;">directions_walk</span>
-              <span class="distance-value-text"></span>
+            <span class="distance-text location-trigger flex items-center gap-1 cursor-pointer text-primary hover:underline">
+              <span class="material-symbols-outlined" style="font-size: 14px;">near_me</span>
+              <span class="distance-value-text">Activer localisation</span>
             </span>
           )}
         </div>
