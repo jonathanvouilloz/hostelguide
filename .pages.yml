@@ -61,27 +61,8 @@ content:
             type: string
       - name: timezone
         label: Timezone
-        type: select
-        options:
-          values:
-            - Asia/Bangkok
-            - Asia/Ho_Chi_Minh
-            - Asia/Singapore
-            - Asia/Kuala_Lumpur
-            - Asia/Jakarta
-            - Asia/Manila
-            - Asia/Phnom_Penh
-            - Asia/Vientiane
-            - Asia/Yangon
-            - Asia/Kolkata
-            - Asia/Kathmandu
-            - Asia/Tokyo
-            - Asia/Seoul
-            - Asia/Shanghai
-            - Asia/Hong_Kong
-            - Asia/Taipei
-            - Australia/Sydney
-            - Pacific/Auckland
+        type: string
+        default: "Asia/Bangkok"
       - name: heroImage
         label: Homepage Hero Image
         type: image
