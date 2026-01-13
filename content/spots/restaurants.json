@@ -26,10 +26,17 @@
       "description": "description",
       "cuisineType": "thai",
       "priceRange": "€",
+      "address": "157 Mun Mueang Rd, Tambon Si Phum, Mueang Chiang Mai District, Chiang Mai 50300",
+      "location": {
+        "lat": 18.7912926,
+        "lng": 98.9932988
+      },
+      "image": "public/images/spots/aroydee.jpg",
+      "phone": "0931715426",
       "openingHours": {
-        "default": "12:00-22:00",
+        "default": "11:00-22:00",
         "exceptions": {
-          "monday": "closed"
+          "sunday": "closed"
         }
       }
     }
