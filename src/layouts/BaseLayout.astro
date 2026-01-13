@@ -16,19 +16,32 @@ const { title, description, showNav = true } = Astro.props;
 
 const settings = await getSettings();
 
+// Normalize hex color (add # if missing)
+function normalizeColor(color: string | undefined): string | undefined {
+  if (!color) return undefined;
+  const trimmed = color.trim();
+  if (trimmed.startsWith('#')) return trimmed;
+  // Check if it looks like a hex color (3, 6, or 8 hex chars)
+  if (/^[0-9a-fA-F]{3,8}$/.test(trimmed)) return `#${trimmed}`;
+  return trimmed;
+}
+
 // Determine theme (default: dark)
 const themeMode: ThemeMode = settings.theme || 'dark';
 const palette = THEME_PALETTES[themeMode];
 
 // Custom colors if defined, otherwise use palette defaults
-const primaryColor = settings.primaryColor || palette.accent;
-const primaryDark = settings.primaryColor
-  ? `color-mix(in srgb, ${settings.primaryColor} 80%, black)`
+const customPrimary = normalizeColor(settings.primaryColor);
+const customAccent = normalizeColor(settings.accentColor);
+
+const primaryColor = customPrimary || palette.accent;
+const primaryDark = customPrimary
+  ? `color-mix(in srgb, ${customPrimary} 80%, black)`
   : palette.accentDark;
-const primaryGlow = settings.primaryColor
-  ? `${settings.primaryColor}4d`
+const primaryGlow = customPrimary
+  ? `${customPrimary}4d`
   : palette.accentGlow;
-const accentColor = settings.accentColor || palette.accent;
+const accentColor = customAccent || palette.accent;
 
 const pageTitle = title
   ? `${title} | ${settings.hostelName}`
