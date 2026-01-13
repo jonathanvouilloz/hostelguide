@@ -173,7 +173,7 @@ export interface SpotsFile {
   spots: Spot[];
 }
 
-export type SpotCategory = 'restaurants' | 'laundry' | 'transport' | 'bars' | 'activities';
+export type SpotCategory = 'restaurants' | 'laundry' | 'transport' | 'bars';
 
 // ============================================
 // Event/Activity Types
@@ -269,6 +269,23 @@ export interface ScheduledEvent {
 // Legacy type aliases for backward compatibility
 export type EventType = ActivityType;
 export type EventCTA = ActivityCTA;
+
+// ============================================
+// Markdown Activities (Inspirational Content)
+// ============================================
+
+export interface MarkdownActivityFrontmatter {
+  title: string;
+  tagline: string;
+  image?: string;
+  order?: number;
+}
+
+export interface MarkdownActivity {
+  slug: string;
+  frontmatter: MarkdownActivityFrontmatter;
+  content: string;
+}
 
 // ============================================
 // Category Metadata

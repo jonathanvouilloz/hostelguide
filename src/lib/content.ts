@@ -11,6 +11,8 @@ import type {
   SpecialEvent,
   SpecialEventsFile,
   ScheduledEvent,
+  MarkdownActivity,
+  MarkdownActivityFrontmatter,
 } from './types';
 
 // ============================================
@@ -66,9 +68,6 @@ export async function getSpots(category: SpotCategory): Promise<Spot[]> {
     case 'bars':
       rawData = (await import('../../content/spots/bars.json')).default;
       break;
-    case 'activities':
-      rawData = (await import('../../content/spots/activities.json')).default;
-      break;
   }
 
   const data = rawData as { spots: Spot[] };
@@ -86,7 +85,7 @@ export async function getSpotById(category: SpotCategory, id: string): Promise<S
 }
 
 export async function getAllSpots(): Promise<Record<SpotCategory, Spot[]>> {
-  const categories: SpotCategory[] = ['restaurants', 'laundry', 'transport', 'bars', 'activities'];
+  const categories: SpotCategory[] = ['restaurants', 'laundry', 'transport', 'bars'];
 
   const results = await Promise.all(
     categories.map(async (category) => ({
@@ -365,6 +364,56 @@ export async function getAllScheduledEventIds(): Promise<string[]> {
 }
 
 // ============================================
+// Markdown Activities (Inspirational Content)
+// ============================================
+
+let cachedMarkdownActivities: MarkdownActivity[] | null = null;
+
+export async function getMarkdownActivities(): Promise<MarkdownActivity[]> {
+  if (cachedMarkdownActivities) {
+    return cachedMarkdownActivities;
+  }
+
+  // Use Astro's glob to import all .md files from /content/activities/
+  const activityFiles = import.meta.glob<{
+    frontmatter: MarkdownActivityFrontmatter;
+    rawContent: () => string;
+  }>('../../content/activities/*.md', { eager: true });
+
+  const activities: MarkdownActivity[] = [];
+
+  for (const [path, module] of Object.entries(activityFiles)) {
+    // Extract slug from path: ../../content/activities/elephant-park.md -> elephant-park
+    const slug = path.split('/').pop()?.replace('.md', '') || '';
+
+    activities.push({
+      slug,
+      frontmatter: module.frontmatter,
+      content: module.rawContent(),
+    });
+  }
+
+  // Sort by order field (default to 999 if not specified)
+  cachedMarkdownActivities = activities.sort(
+    (a, b) => (a.frontmatter.order ?? 999) - (b.frontmatter.order ?? 999)
+  );
+
+  return cachedMarkdownActivities;
+}
+
+export async function getMarkdownActivityBySlug(
+  slug: string
+): Promise<MarkdownActivity | undefined> {
+  const activities = await getMarkdownActivities();
+  return activities.find((a) => a.slug === slug);
+}
+
+export async function getAllMarkdownActivitySlugs(): Promise<string[]> {
+  const activities = await getMarkdownActivities();
+  return activities.map((a) => a.slug);
+}
+
+// ============================================
 // Category Metadata
 // ============================================
 
@@ -392,12 +441,6 @@ export const CATEGORIES: CategoryMeta[] = [
     name: 'Bars',
     emoji: '🍺',
     description: 'Bars and nightlife',
-  },
-  {
-    slug: 'activities',
-    name: 'Activities',
-    emoji: '🎯',
-    description: 'Tours and activities',
   },
 ];
 

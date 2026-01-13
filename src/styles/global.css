@@ -272,6 +272,66 @@ body {
 }
 
 /* ============================================
+   Prose Activity - Markdown for activities pages
+   ============================================ */
+
+.prose-activity {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.prose-activity h1 {
+  display: none;
+}
+
+.prose-activity h2 {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-separator);
+}
+
+.prose-activity h2:first-child {
+  margin-top: 0;
+}
+
+.prose-activity h3 {
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-activity p {
+  margin-bottom: 0.875rem;
+}
+
+.prose-activity ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.prose-activity ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.prose-activity li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-activity strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ============================================
    Material Symbols Configuration
    ============================================ */
 

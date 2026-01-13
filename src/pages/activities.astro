@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import SpotCard from '../components/SpotCard.astro';
-import { getSpots } from '../lib/content';
+import ActivityCard from '../components/ActivityCard.astro';
+import { getMarkdownActivities } from '../lib/content';
 
-const spots = await getSpots('activities');
+const activities = await getMarkdownActivities();
 ---
 
 <BaseLayout title="Activities">
@@ -17,16 +17,16 @@ const spots = await getSpots('activities');
         Adventures
         <br />
         <span class="text-(--color-text-secondary) font-medium text-lg">
-          Tours, trips & things to do.
+          Things to do around Chiang Mai
         </span>
       </h2>
     </div>
 
-    <!-- Spots List -->
-    {spots.length > 0 ? (
+    <!-- Activities Grid -->
+    {activities.length > 0 ? (
       <div class="space-y-4">
-        {spots.map((spot) => (
-          <SpotCard spot={spot} category="activities" />
+        {activities.map((activity) => (
+          <ActivityCard activity={activity} />
         ))}
       </div>
     ) : (
@@ -36,8 +36,3 @@ const spots = await getSpots('activities');
     )}
   </main>
 </BaseLayout>
-
-<script>
-  import { initDistanceDisplay } from '../lib/geolocation';
-  initDistanceDisplay();
-</script>

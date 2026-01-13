@@ -360,51 +360,37 @@ content:
             type: string
 
   - name: activities
-    label: "🎯 Activities"
-    path: content/spots/activities.json
-    type: file
+    label: "🎯 Activities (Adventures)"
+    path: content/activities
+    type: collection
+    description: "Things to do around the area - inspirational content"
+    view:
+      fields: [title, tagline, order]
+      primary: title
+      sort: [order, asc]
     fields:
-      - name: spots
-        label: Spots
-        type: object
-        list: true
-        fields:
-          - name: name
-            label: Name
-            type: string
-            required: true
-          - name: description
-            label: Description
-            type: text
-          - name: priceRange
-            label: Price Range
-            type: select
-            options:
-              values:
-                - €
-                - €€
-                - €€€
-          - name: address
-            label: Address
-            type: string
-          - name: location
-            label: Location
-            type: object
-            fields:
-              - name: lat
-                label: Latitude
-                type: number
-              - name: lng
-                label: Longitude
-                type: number
-          - name: image
-            label: Image
-            type: image
-            options:
-              path: public/images/spots
-          - name: phone
-            label: Phone
-            type: string
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: tagline
+        label: Tagline
+        type: string
+        required: true
+        description: "Short catchy hook for the card (max ~60 chars)"
+      - name: image
+        label: Cover Image
+        type: image
+        options:
+          path: public/images/activities
+      - name: order
+        label: Display Order
+        type: number
+        description: "Lower numbers appear first"
+      - name: body
+        label: Content
+        type: rich-text
+        description: "Full article content in Markdown"
 
   # ============================================
   # Events System (Activities + Schedule + Special Events)
