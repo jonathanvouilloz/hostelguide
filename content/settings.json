@@ -1,6 +1,9 @@
 {
   "hostelName": "Whoopers Hostel Chiang Mai",
   "logo": "/images/whoopers.jpeg",
+  "favicon": "/images/whoopers.jpeg",
+  "pwaIcon192": "/images/whoopers.jpeg",
+  "pwaIcon512": "/images/whoopers.jpeg",
   "primaryColor": "fbe845",
   "wifi": {
     "name": "WHOOPERS 2.4G",

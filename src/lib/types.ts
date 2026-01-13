@@ -94,6 +94,10 @@ export interface Settings {
   timezone: string;
   heroImage?: string;
   categoryImages?: CategoryImages;
+  // PWA assets
+  favicon?: string;
+  pwaIcon192?: string;
+  pwaIcon512?: string;
   // Onboarding & guest data
   whatsappGroupLink?: string;
   webhookUrl?: string;

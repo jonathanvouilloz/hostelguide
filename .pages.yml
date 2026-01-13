@@ -16,6 +16,24 @@ content:
         type: image
         options:
           path: public/images
+      - name: favicon
+        label: Favicon
+        type: image
+        options:
+          path: public/images
+        description: "Browser tab icon (ideally square PNG)"
+      - name: pwaIcon192
+        label: PWA Icon 192x192
+        type: image
+        options:
+          path: public/images
+        description: "App icon for PWA install (192x192 PNG recommended)"
+      - name: pwaIcon512
+        label: PWA Icon 512x512
+        type: image
+        options:
+          path: public/images
+        description: "Large app icon for PWA splash screen (512x512 PNG recommended)"
       - name: primaryColor
         label: Primary Color
         type: string
