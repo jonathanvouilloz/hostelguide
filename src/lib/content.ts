@@ -141,18 +141,16 @@ export async function getActivities(): Promise<Activity[]> {
     { eager: true }
   );
 
-  const activities: Activity[] = [];
+  // Use Map to deduplicate by ID
+  const activitiesMap = new Map<string, Activity>();
 
   for (const path in activityFiles) {
-    const data = activityFiles[path];
-    const activity = data.default;
-    activities.push({
-      ...activity,
-      id: activity.id || slugify(activity.title),
-    });
+    const activity = activityFiles[path].default;
+    const id = activity.id || slugify(activity.title);
+    activitiesMap.set(id, { ...activity, id });
   }
 
-  return activities;
+  return Array.from(activitiesMap.values());
 }
 
 export async function getActivityById(id: string): Promise<Activity | undefined> {
